@@ -5,6 +5,7 @@ import '../widgets/gradient_border_button.dart';
 import '../widgets/gradient_icon.dart';
 import '../widgets/gradient_border_text.dart';
 import '../widgets/gradient_border_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -19,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _confirmPasswordVisible = false;
 
   // Auth service and controllers instances
-  final authService = AuthService();
+  final authService = AuthService(Supabase.instance.client);
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
