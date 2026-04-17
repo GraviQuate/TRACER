@@ -6,43 +6,55 @@ import '../widgets/gradient_icon.dart';
 import '../widgets/gradient_border_text.dart';
 import '../widgets/gradient_border_snackbar.dart';
 
-import 'signup_screen.dart';
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   // Variables for managing form state
   bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   // Auth service and controllers instances
   final authService = AuthService();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  // Log in function
-  Future<void> login() async {
+  // Sign up function
+  Future<void> signup() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Attempt to log in the user
+    // Check if passwords match
+    if (password != confirmPassword) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          GradientBorderSnackbar(message: 'Passwords do not match. Please try again.')
+        );
+      }
+      return;
+    }
+
+    // Attempt to sign up the user
     try {
-      await authService.logIn(email, password);
+      await authService.signUp(email, password);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          GradientBorderSnackbar(message: 'Log in successful!')
+          GradientBorderSnackbar(message: 'Sign up successful! Please check your email to verify your account and proceed to log in.')
         );
+        Navigator.pop(context);
       }
-    // Handle login errors
+    // Handle sign up errors
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          GradientBorderSnackbar(message: 'Log in failed: $e.')
+          GradientBorderSnackbar(message: 'Sign up failed: $e.')
         );
       }
     }
@@ -78,7 +90,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             GradientBorderText(
                               text: 'WELCOME TO',
@@ -216,14 +227,54 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                 ),
-                                // Sign in button
+                                // Confirm Password field
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: _confirmPasswordController,
+                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
+                                  obscureText: !_confirmPasswordVisible,
+                                  decoration: InputDecoration(
+                                    hintText: 'Confirm Password',
+                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
+                                    filled: true,
+                                    fillColor: Colors.grey.withOpacity(0.1),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: GradientIcon(
+                                      icon: Icons.lock,
+                                      size: AppDesign.sBtnIconSize,
+                                      gradient: LinearGradient(colors: [
+                                        AppDesign.primaryGradientStart,
+                                        AppDesign.primaryGradientEnd
+                                      ]),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: GradientIcon(
+                                        icon: _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                        size: AppDesign.sBtnIconSize,
+                                        gradient: LinearGradient(colors: [
+                                          AppDesign.primaryGradientStart,
+                                          AppDesign.primaryGradientEnd
+                                        ]),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _confirmPasswordVisible = !_confirmPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                // Sign up button
                                 const SizedBox(height: 16),
                                 SizedBox(
                                   width: 2000.0,
                                   height: 50.0,
                                   child: GradientBorderButton(
                                     onPressed: () async {
-                                      await login();
+                                      await signup();
                                     },
                                     gradient: LinearGradient(colors: [
                                         AppDesign.primaryGradientStart,
@@ -231,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ]),
                                     borderRadius: AppDesign.sBtnBorderRadius,
                                     child: const Text(
-                                      'Log In',
+                                      'Sign Up',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
@@ -247,15 +298,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const Text(
-                                      "Don't have an account? ",
+                                      "Already have an account? ",
                                       style: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const SignupScreen()),
-                                        );
+                                        Navigator.pop(context);
                                       },
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,
@@ -263,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                       ),
                                       child: Text(
-                                        'Sign Up now',
+                                        'Log In now',
                                         style: TextStyle(
                                           color: AppDesign.primaryGradientEnd,
                                           fontWeight: FontWeight.bold,
