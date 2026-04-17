@@ -226,7 +226,7 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
                             onPressed: () async {
                               _initialAnimationController.forward();
 
-                              transaction = await scanForm(widget.imagePath);
+                              transaction = await scanForm(await File(widget.imagePath).readAsBytes());
 
                               if (!context.mounted) return;
 
