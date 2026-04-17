@@ -43,6 +43,7 @@ dependencies:
   image: ^4.5.4
   native_device_orientation: ^2.0.4
   number_to_words_english: ^3.0.4
+  http: ^1.6.0
 
 assets:
   assets/.env

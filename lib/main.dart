@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:tracer/services/db_service.dart';
-
 import 'package:tracer/auth/auth_gate.dart';
 
 Future<void> main() async {

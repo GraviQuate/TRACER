@@ -8,4 +8,6 @@ final class Env {
   static final String supabaseUrl = _Env.supabaseUrl;
   @EnviedField(varName: 'SUPABASE_API_KEY', obfuscate: true)
   static final String supabaseKey = _Env.supabaseKey;
+  @EnviedField(varName: 'DOC_AI_KEY', obfuscate: true)
+  static final String docAiKey = _Env.docAiKey;
 }
