@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:tracer/models/transaction.dart';
 import 'package:tracer/screens/data_verification_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -114,7 +113,6 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
 
   @override
   Widget build(BuildContext context) {
-    RecognizedText recognizedText;
     Transaction transaction = Transaction();
 
     return Container(
