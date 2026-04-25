@@ -30,7 +30,7 @@ Future<Transaction> scanForm(Uint8List imageBytes, {http.Client ? client}) async
       transaction.transactMonth = result['data']['MONTH'];
       transaction.transactDay = result['data']['DAY'];
       transaction.transactYear = result['data']['YEAR'];
-      transaction.transactAmount = result['data']['AMOUNT (Php)'];
+      transaction.transactAmount = result['data']['AMOUNT (PHP)'];
       transaction.transactPurpose = result['data']['TRANSACTION DESCRIPTION'];
       transaction.foFirstName = result['data']['FO FIRST NAME'];
       transaction.foMiddleInitial = result['data']['FO MIDDLE INITIAL'];
