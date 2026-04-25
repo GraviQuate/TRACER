@@ -26,7 +26,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
   final TextEditingController _stuMiddleInitialController = TextEditingController();
   final TextEditingController _stuLastNameController = TextEditingController();
   final TextEditingController _stuNumController = TextEditingController();
-  final TextEditingController _receiptNumController = TextEditingController();
+  final TextEditingController _transactReceiptNumController = TextEditingController();
   final TextEditingController _transactMonthController = TextEditingController();
   final TextEditingController _transactDayController = TextEditingController();
   final TextEditingController _transactYearController = TextEditingController();
@@ -93,7 +93,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
     _stuMiddleInitialController.text = _formatMI(widget.transaction.stuMiddleInitial ?? "");
     _stuLastNameController.text = _formatName(widget.transaction.stuLastName ?? "");
     _stuNumController.text = _formatNum(widget.transaction.stuNum ?? "");
-    _receiptNumController.text = _formatNum(widget.transaction.receiptNum ?? "");
+    _transactReceiptNumController.text = _formatNum(widget.transaction.receiptNum ?? "");
     _transactMonthController.text = _formatNum(widget.transaction.transactMonth ?? "");
     _transactDayController.text = _formatNum(widget.transaction.transactDay ?? "");
     _transactYearController.text = _formatNum(widget.transaction.transactYear ?? "");
@@ -110,7 +110,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
     widget.transaction.stuMiddleInitial = _stuMiddleInitialController.text;
     widget.transaction.stuLastName = _stuLastNameController.text;
     widget.transaction.stuNum = _stuNumController.text;
-    widget.transaction.receiptNum = _receiptNumController.text;
+    widget.transaction.receiptNum = _transactReceiptNumController.text;
     widget.transaction.transactMonth = _transactMonthController.text;
     widget.transaction.transactDay = _transactDayController.text;
     widget.transaction.transactYear = _transactYearController.text;
@@ -280,35 +280,12 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                   Divider(
                                     color: Colors.grey
                                   ),
-                                  const Text(
-                                    "First Name",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
+                                  LabeledField(
+                                    label: "First Name",
                                     controller: _stuFirstNameController,
-                                    inputFormatters: [
-                                      NameFormatter()
-                                    ],
+                                    formatters: [NameFormatter()],
                                     keyboardType: TextInputType.name,
                                     textCapitalization: TextCapitalization.words,
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
                                   ),
 
                                   Row(
@@ -320,36 +297,15 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Middle Initial",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Middle Initial",
                                               controller: _stuMiddleInitialController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
                                                 MIFormatter()
                                               ],
                                               keyboardType: TextInputType.name,
                                               textCapitalization: TextCapitalization.words,
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.edit_outlined,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
                                             ),
                                           ],
                                         ),
@@ -365,35 +321,14 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Last Name",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Last Name",
                                               controller: _stuLastNameController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 NameFormatter()
                                               ],
                                               keyboardType: TextInputType.name,
                                               textCapitalization: TextCapitalization.words,
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.edit_outlined,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
                                             ),
                                           ],
                                         ),
@@ -401,34 +336,13 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ],
                                   ),
 
-                                  const Text(
-                                    "Student No.",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
+                                  LabeledField(
+                                    label: "Student Number",
                                     controller: _stuNumController,
-                                    inputFormatters: [
+                                    formatters: [
                                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                                     ],
                                     keyboardType: TextInputType.number,
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
                                   ),
                                 ],
                               ),
@@ -467,39 +381,20 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Month",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Month",
+                                              suffixIcon: Icons.arrow_drop_down,
                                               controller: _transactMonthController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 FilteringTextInputFormatter.digitsOnly,
                                                 LengthLimitingTextInputFormatter(2),
                                               ],
+                                              keyboardType: TextInputType.number,
                                               readOnly: true,
                                               onTap: () async {
                                                 await _selectDate(context);
                                               },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.arrow_drop_down,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -510,39 +405,20 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Day",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Day",
+                                              suffixIcon: Icons.arrow_drop_down,
                                               controller: _transactDayController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 FilteringTextInputFormatter.digitsOnly,
                                                 LengthLimitingTextInputFormatter(2),
                                               ],
+                                              keyboardType: TextInputType.number,
                                               readOnly: true,
                                               onTap: () async {
                                                 await _selectDate(context);
                                               },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.arrow_drop_down,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -553,173 +429,47 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Year",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Year",
+                                              suffixIcon: Icons.arrow_drop_down,
                                               controller: _transactYearController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 FilteringTextInputFormatter.digitsOnly,
                                                 LengthLimitingTextInputFormatter(2),
                                               ],
+                                              keyboardType: TextInputType.number,
                                               readOnly: true,
                                               onTap: () async {
                                                 await _selectDate(context);
                                               },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.arrow_drop_down,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
 
-                                  const Text(
-                                    "Amount",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
-                                    controller: _transactAmountController,
-                                    onChanged: (_) {
-                                      _transactAmountWordsController.text = _getAmtWords(_transactAmountController.text);
-                                    },
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                    onTap: () async {
-
-                                    },
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    prefixText: "PHP ",
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
-                                  ),
-
-                                  const Text(
-                                    "Amount in words",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
+                                  LabeledField(
+                                    label: "Amount in words",
+                                    suffixIcon: Icons.edit_off_outlined,
+                                    fillColor: Colors.grey.shade100,
                                     controller: _transactAmountWordsController,
                                     readOnly: true,
-                                    onTap: () async {
-
-                                    },
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    fillColor: Colors.grey.shade100,
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_off_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
                                   ),
 
-                                  const Text(
-                                    "Purpose of the transaction",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
+                                  LabeledField(
+                                    label: "Purpose of the Transaction",
                                     controller: _transactPurposeController,
                                     textCapitalization: TextCapitalization.words,
-                                    onTap: () async {
-
-                                    },
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
                                   ),
 
-                                  const Text(
-                                    "Receipt Number",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
-                                    controller: _receiptNumController,
-                                    inputFormatters: [
+                                  LabeledField(
+                                    label: "Receipt Number",
+                                    controller: _transactReceiptNumController,
+                                    formatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
-                                    onTap: () async {
-
-                                    },
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
+                                    keyboardType: TextInputType.number,
                                   ),
                                 ],
                               ),
@@ -750,39 +500,16 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                     color: Colors.grey
                                   ),
 
-                                  const Text(
-                                    "First Name",
-                                    style: TextStyle(
-                                      color: AppDesign.appOffblack,
-                                      fontSize: 12.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  GradientTextFormField(
+                                  LabeledField(
+                                    label: "First Name",
                                     controller: _foFirstNameController,
-                                    inputFormatters: [
-                                      NameFormatter()
+                                    formatters: [
+                                      NameFormatter(),
                                     ],
                                     keyboardType: TextInputType.name,
                                     textCapitalization: TextCapitalization.words,
-                                    onTap: () async {
-
-                                    },
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    activeGradient: const LinearGradient(
-                                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                    ),
-                                    suffixIcon: GradientIcon(
-                                      icon: Icons.edit_outlined,
-                                      size: 24.0,
-                                      gradient: const LinearGradient(
-                                        colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                        begin: Alignment.bottomLeft,
-                                        end: Alignment.topRight,
-                                      )
-                                    ),
                                   ),
+
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -792,83 +519,38 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Middle Initial",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Middle Initial",
                                               controller: _foMiddleInitialController,
-                                              inputFormatters: [
+                                              formatters: [
                                                 FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
                                                 MIFormatter()
                                               ],
                                               keyboardType: TextInputType.name,
                                               textCapitalization: TextCapitalization.words,
-                                              onTap: () {
-
-                                              },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.edit_outlined,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
+
                                       SizedBox(width: 10.0),
+
                                       Expanded(
                                         flex: 7,
                                         child: Column(
                                           spacing: 5.0,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text(
-                                              "Last Name",
-                                              style: TextStyle(
-                                                color: AppDesign.appOffblack,
-                                                fontSize: 12.0,
-                                                fontFamily: "AROneSans",
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GradientTextFormField(
+                                            LabeledField(
+                                              label: "Last Name",
                                               controller: _foLastNameController,
-                                              inputFormatters: [
-                                                NameFormatter()
+                                              formatters: [
+                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
+                                                MIFormatter()
                                               ],
                                               keyboardType: TextInputType.name,
                                               textCapitalization: TextCapitalization.words,
-                                              onTap: () {
-
-                                              },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              activeGradient: const LinearGradient(
-                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                              ),
-                                              suffixIcon: GradientIcon(
-                                                icon: Icons.edit_outlined,
-                                                size: 24.0,
-                                                gradient: const LinearGradient(
-                                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                                                  begin: Alignment.bottomLeft,
-                                                  end: Alignment.topRight,
-                                                )
-                                              ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -1059,6 +741,66 @@ class _Popup extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LabeledField extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final List<TextInputFormatter>? formatters;
+  final TextInputType? keyboardType;
+  final TextCapitalization? textCapitalization;
+  final VoidCallback? onTap;
+  final bool readOnly;
+  final IconData suffixIcon;
+  final Color fillColor;
+
+  const LabeledField({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.formatters,
+    this.keyboardType,
+    this.textCapitalization,
+    this.onTap,
+    this.readOnly = false,
+    this.suffixIcon = Icons.edit_outlined,
+    this.fillColor = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12.0, fontFamily: "AROneSans", fontWeight: FontWeight.bold)),
+        const SizedBox(height: 5),
+        GradientTextFormField(
+          controller: controller,
+          inputFormatters: formatters,
+          keyboardType: keyboardType,
+          textCapitalization: textCapitalization ?? TextCapitalization.none,
+          readOnly: readOnly,
+          onTap: onTap,
+
+          // Shared design properties
+          fillColor: fillColor,
+          activeGradient: const LinearGradient(
+            colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
+          ),
+          borderRadius: BorderRadius.circular(30.0),
+          suffixIcon: GradientIcon(
+            icon: suffixIcon,
+            size: 24.0,
+            gradient: const LinearGradient(
+              colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+            )
+          ),
+        ),
+      ],
     );
   }
 }
