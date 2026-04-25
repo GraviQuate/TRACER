@@ -10,7 +10,7 @@ Future<Transaction> scanForm(Uint8List imageBytes, {http.Client ? client}) async
   Transaction transaction = Transaction();
 
   final response = await httpClient.post(
-    Uri.parse('https://doc-ai-processor-724917125047.asia-southeast3.run.app'),
+    Uri.parse(Env.docAiEndpointUrl),
     headers: {
       "Content-Type": "application/json",
       "X-Tracer-Key": Env.docAiKey,
