@@ -205,14 +205,14 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                     alignment: AlignmentGeometry.topCenter,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 60.0),
+                        padding: const EdgeInsets.symmetric(vertical: 80.0),
                         child: SvgPicture.asset(
                           'assets/images/svg/data_verification_screen_top_graphic.svg',
                         ),
                       ),
 
                       SingleChildScrollView(
-                        padding: const EdgeInsets.only(top: 300.0),
+                        padding: const EdgeInsets.only(top: 250.0),
                         child: Column(
                           children: [
                             Container(
