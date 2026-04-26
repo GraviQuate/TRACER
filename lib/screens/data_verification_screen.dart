@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:number_to_words_english/number_to_words_english.dart';
 import 'package:tracer/services/db_service.dart';
@@ -8,7 +9,7 @@ import 'package:tracer/widgets/gradient_border_button.dart';
 import 'package:tracer/widgets/gradient_border_text_form_field.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
 
-import '../utils/constants.dart';
+import 'package:tracer/utils/constants.dart';
 import 'package:tracer/models/transaction.dart';
 
 class DataVerificationScreen extends StatefulWidget {
@@ -200,396 +201,412 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
               bottom: false,
               child: Stack(
                 children: [
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.only(top: 200.0),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: bottomInset),
-                        child: Form(
-                          child: Column(
-                            spacing: 20.0,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Please confirm the details are correct",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: AppDesign.appOffblack,
-                                  fontFamily: "AROneSans",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-
-                              VerificationSection(
-                                title: "Student Details",
-                                children: [
-                                  LabeledField(
-                                    label: "First Name",
-                                    controller: _stuFirstNameController,
-                                    formatters: [NameFormatter()],
-                                    keyboardType: TextInputType.name,
-                                    textCapitalization: TextCapitalization.words,
-                                  ),
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Middle Initial",
-                                              controller: _stuMiddleInitialController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
-                                                MIFormatter()
-                                              ],
-                                              keyboardType: TextInputType.name,
-                                              textCapitalization: TextCapitalization.words,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      const SizedBox(
-                                        width: 10.0,
-                                      ),
-
-                                      Expanded(
-                                        flex: 7,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Last Name",
-                                              controller: _stuLastNameController,
-                                              formatters: [
-                                                NameFormatter()
-                                              ],
-                                              keyboardType: TextInputType.name,
-                                              textCapitalization: TextCapitalization.words,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  LabeledField(
-                                    label: "Student Number",
-                                    controller: _stuNumController,
-                                    formatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ],
-                              ),
-
-                              VerificationSection(
-                                title: "Transaction Details",
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 4,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Month",
-                                              suffixIcon: Icons.arrow_drop_down,
-                                              controller: _transactMonthController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.digitsOnly,
-                                                LengthLimitingTextInputFormatter(2),
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                              readOnly: true,
-                                              onTap: () async {
-                                                await _selectDate(context);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 10.0),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Day",
-                                              suffixIcon: Icons.arrow_drop_down,
-                                              controller: _transactDayController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.digitsOnly,
-                                                LengthLimitingTextInputFormatter(2),
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                              readOnly: true,
-                                              onTap: () async {
-                                                await _selectDate(context);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 10.0),
-                                      Expanded(
-                                        flex: 5,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Year",
-                                              suffixIcon: Icons.arrow_drop_down,
-                                              controller: _transactYearController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.digitsOnly,
-                                                LengthLimitingTextInputFormatter(2),
-                                              ],
-                                              keyboardType: TextInputType.number,
-                                              readOnly: true,
-                                              onTap: () async {
-                                                await _selectDate(context);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  LabeledField(
-                                    label: "Amount",
-                                    controller: _transactAmountController,
-                                    formatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    prefixText: "PHP ",
-                                  ),
-
-                                  LabeledField(
-                                    label: "Amount in words",
-                                    suffixIcon: Icons.edit_off_outlined,
-                                    textColor: Colors.grey.shade500,
-                                    controller: _transactAmountWordsController,
-                                    readOnly: true,
-                                  ),
-
-                                  LabeledField(
-                                    label: "Description",
-                                    controller: _transactDescriptionController,
-                                    formatters: [
-                                      NameFormatter(),
-                                    ],
-                                    textCapitalization: TextCapitalization.words,
-                                  ),
-
-                                  LabeledField(
-                                    label: "Receipt Number",
-                                    controller: _transactRecordNumController,
-                                    formatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ],
-                              ),
-
-                              VerificationSection(
-                                title: "Finance Officer Details",
-                                children: [
-                                  LabeledField(
-                                    label: "First Name",
-                                    controller: _foFirstNameController,
-                                    formatters: [
-                                      NameFormatter(),
-                                    ],
-                                    keyboardType: TextInputType.name,
-                                    textCapitalization: TextCapitalization.words,
-                                  ),
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Middle Initial",
-                                              controller: _foMiddleInitialController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
-                                                MIFormatter()
-                                              ],
-                                              keyboardType: TextInputType.name,
-                                              textCapitalization: TextCapitalization.words,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      SizedBox(width: 10.0),
-
-                                      Expanded(
-                                        flex: 7,
-                                        child: Column(
-                                          spacing: 5.0,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            LabeledField(
-                                              label: "Last Name",
-                                              controller: _foLastNameController,
-                                              formatters: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
-                                                MIFormatter()
-                                              ],
-                                              keyboardType: TextInputType.name,
-                                              textCapitalization: TextCapitalization.words,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                              GradientBorderButton(
-                                onPressed: () async {
-                                  try {
-                                    _setTransactionFromFields();
-
-                                    final List<Map<String, dynamic>> response =
-                                      await context.read<DbService>().insertTransaction(widget.transaction);
-
-                                    if (response.isNotEmpty) {
-                                      debugPrint('Transaction saved successfully! ID: ${response.first['id']}');
-
-                                      if (!context.mounted) return;
-
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) {
-                                          return _Popup(
-                                            GradientIcon(
-                                              icon: Icons.check_circle_outline,
-                                              size: 48.0,
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  AppDesign.primaryGradientStart,
-                                                  AppDesign.primaryGradientEnd,
-                                                ],
-                                              ),
-                                            ),
-                                            "Data saved successfully!\nReceipt was also sent to student's email.",
-                                            GradientBorderButton(
-                                              onPressed: () async {
-                                                Navigator.of(context).pop(); // NOTE: change to named routing
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              },
-                                              borderRadius: BorderRadius.circular(30.0),
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  AppDesign.primaryGradientStart,
-                                                  AppDesign.primaryGradientEnd,
-                                                ],
-                                              ),
-                                              child: Text(
-                                                "Confirm",
-                                                style: TextStyle(
-                                                  color: AppDesign.appOffblack,
-                                                  fontSize: 12.0,
-                                                  fontFamily: "AROneSans",
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      );
-                                    }
-                                  } catch (e) {
-                                    debugPrint('Upload Failed $e');
-
-                                    if (!context.mounted) return;
-
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) {
-                                        return _Popup(
-                                          Icon(
-                                            Icons.error,
-                                            size: 48.0,
-                                            color: Colors.red,
-                                          ),
-                                          "Failed to upload the data!\nFailed to generate receipt! :(",
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context, rootNavigator: true).pop();
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  "Ok",
-                                                  style: TextStyle(
-                                                    color: AppDesign.appOffblack,
-                                                    fontSize: 14.0,
-                                                    fontFamily: "AROneSans",
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    );
-                                  }
-                                },
-                                borderRadius: BorderRadius.circular(30.0),
-                                gradient: const LinearGradient(
-                                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-                                ),
-                                child: const Text(
-                                  "Upload to Database",
-                                  style: TextStyle(
-                                    color: AppDesign.appOffblack,
-                                    fontSize: 14.0,
-                                    fontFamily: "AROneSans",
-                                  ),
-                                ),
-                              ),
-
-                            ],
-                          ),
+                  Stack(
+                    alignment: AlignmentGeometry.topCenter,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 60.0),
+                        child: SvgPicture.asset(
+                          'assets/images/svg/data_verification_screen_top_graphic.svg',
                         ),
                       ),
-                    ),
+
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.only(top: 300.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: bottomInset),
+                                child: Form(
+                                  child: Column(
+                                    spacing: 20.0,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Please confirm the details are correct",
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: AppDesign.appOffblack,
+                                          fontFamily: "AROneSans",
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+
+                                      VerificationSection(
+                                        title: "Student Details",
+                                        children: [
+                                          LabeledField(
+                                            label: "First Name",
+                                            controller: _stuFirstNameController,
+                                            formatters: [NameFormatter()],
+                                            keyboardType: TextInputType.name,
+                                            textCapitalization: TextCapitalization.words,
+                                          ),
+
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Middle Initial",
+                                                      controller: _stuMiddleInitialController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
+                                                        MIFormatter()
+                                                      ],
+                                                      keyboardType: TextInputType.name,
+                                                      textCapitalization: TextCapitalization.words,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+
+                                              Expanded(
+                                                flex: 7,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Last Name",
+                                                      controller: _stuLastNameController,
+                                                      formatters: [
+                                                        NameFormatter()
+                                                      ],
+                                                      keyboardType: TextInputType.name,
+                                                      textCapitalization: TextCapitalization.words,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          LabeledField(
+                                            label: "Student Number",
+                                            controller: _stuNumController,
+                                            formatters: [
+                                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                                            ],
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                        ],
+                                      ),
+
+                                      VerificationSection(
+                                        title: "Transaction Details",
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 4,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Month",
+                                                      suffixIcon: Icons.arrow_drop_down,
+                                                      controller: _transactMonthController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                        LengthLimitingTextInputFormatter(2),
+                                                      ],
+                                                      keyboardType: TextInputType.number,
+                                                      readOnly: true,
+                                                      onTap: () async {
+                                                        await _selectDate(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.0),
+                                              Expanded(
+                                                flex: 4,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Day",
+                                                      suffixIcon: Icons.arrow_drop_down,
+                                                      controller: _transactDayController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                        LengthLimitingTextInputFormatter(2),
+                                                      ],
+                                                      keyboardType: TextInputType.number,
+                                                      readOnly: true,
+                                                      onTap: () async {
+                                                        await _selectDate(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.0),
+                                              Expanded(
+                                                flex: 5,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Year",
+                                                      suffixIcon: Icons.arrow_drop_down,
+                                                      controller: _transactYearController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                        LengthLimitingTextInputFormatter(2),
+                                                      ],
+                                                      keyboardType: TextInputType.number,
+                                                      readOnly: true,
+                                                      onTap: () async {
+                                                        await _selectDate(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          LabeledField(
+                                            label: "Amount",
+                                            controller: _transactAmountController,
+                                            formatters: [
+                                              FilteringTextInputFormatter.digitsOnly,
+                                            ],
+                                            prefixText: "PHP ",
+                                          ),
+
+                                          LabeledField(
+                                            label: "Amount in words",
+                                            suffixIcon: Icons.edit_off_outlined,
+                                            textColor: Colors.grey.shade500,
+                                            controller: _transactAmountWordsController,
+                                            readOnly: true,
+                                          ),
+
+                                          LabeledField(
+                                            label: "Description",
+                                            controller: _transactDescriptionController,
+                                            formatters: [
+                                              NameFormatter(),
+                                            ],
+                                            textCapitalization: TextCapitalization.words,
+                                          ),
+
+                                          LabeledField(
+                                            label: "Receipt Number",
+                                            controller: _transactRecordNumController,
+                                            formatters: [
+                                              FilteringTextInputFormatter.digitsOnly,
+                                            ],
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                        ],
+                                      ),
+
+                                      VerificationSection(
+                                        title: "Finance Officer Details",
+                                        children: [
+                                          LabeledField(
+                                            label: "First Name",
+                                            controller: _foFirstNameController,
+                                            formatters: [
+                                              NameFormatter(),
+                                            ],
+                                            keyboardType: TextInputType.name,
+                                            textCapitalization: TextCapitalization.words,
+                                          ),
+
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Middle Initial",
+                                                      controller: _foMiddleInitialController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
+                                                        MIFormatter()
+                                                      ],
+                                                      keyboardType: TextInputType.name,
+                                                      textCapitalization: TextCapitalization.words,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                              SizedBox(width: 10.0),
+
+                                              Expanded(
+                                                flex: 7,
+                                                child: Column(
+                                                  spacing: 5.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    LabeledField(
+                                                      label: "Last Name",
+                                                      controller: _foLastNameController,
+                                                      formatters: [
+                                                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
+                                                        MIFormatter()
+                                                      ],
+                                                      keyboardType: TextInputType.name,
+                                                      textCapitalization: TextCapitalization.words,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+
+                                      GradientBorderButton(
+                                        onPressed: () async {
+                                          try {
+                                            _setTransactionFromFields();
+
+                                            final List<Map<String, dynamic>> response =
+                                              await context.read<DbService>().insertTransaction(widget.transaction);
+
+                                            if (response.isNotEmpty) {
+                                              debugPrint('Transaction saved successfully! ID: ${response.first['id']}');
+
+                                              if (!context.mounted) return;
+
+                                              showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (context) {
+                                                  return _Popup(
+                                                    GradientIcon(
+                                                      icon: Icons.check_circle_outline,
+                                                      size: 48.0,
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          AppDesign.primaryGradientStart,
+                                                          AppDesign.primaryGradientEnd,
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    "Data saved successfully!\nReceipt was also sent to student's email.",
+                                                    GradientBorderButton(
+                                                      onPressed: () async {
+                                                        Navigator.of(context).pop(); // NOTE: change to named routing
+                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      borderRadius: BorderRadius.circular(30.0),
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          AppDesign.primaryGradientStart,
+                                                          AppDesign.primaryGradientEnd,
+                                                        ],
+                                                      ),
+                                                      child: Text(
+                                                        "Confirm",
+                                                        style: TextStyle(
+                                                          color: AppDesign.appOffblack,
+                                                          fontSize: 12.0,
+                                                          fontFamily: "AROneSans",
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              );
+                                            }
+                                          } catch (e) {
+                                            debugPrint('Upload Failed $e');
+
+                                            if (!context.mounted) return;
+
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) {
+                                                return _Popup(
+                                                  Icon(
+                                                    Icons.error,
+                                                    size: 48.0,
+                                                    color: Colors.red,
+                                                  ),
+                                                  "Failed to upload the data!\nFailed to generate receipt! :(",
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context, rootNavigator: true).pop();
+                                                    },
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          "Ok",
+                                                          style: TextStyle(
+                                                            color: AppDesign.appOffblack,
+                                                            fontSize: 14.0,
+                                                            fontFamily: "AROneSans",
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            );
+                                          }
+                                        },
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        gradient: const LinearGradient(
+                                          colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
+                                        ),
+                                        child: const Text(
+                                          "Upload to Database",
+                                          style: TextStyle(
+                                            color: AppDesign.appOffblack,
+                                            fontSize: 14.0,
+                                            fontFamily: "AROneSans",
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
 
                   Padding(
