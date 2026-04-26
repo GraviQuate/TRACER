@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tracer/models/transaction.dart';
-import 'package:tracer/screens/data_verification_screen.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tracer/services/doc_ai_service.dart';
 
 import '../widgets/gradient_border_button.dart';
@@ -31,16 +29,7 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
   late Animation<double> _resizeAnimation;
   late Animation<double> _translationAnimation;
 
-  final _picker = ImagePicker();
   late File _image;
-
-  Future<void> _openImagePicker() async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      _image = File(pickedImage.path);
-    }
-  }
 
   @override
   void initState() {

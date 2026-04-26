@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as img;
 import 'package:native_device_orientation/native_device_orientation.dart';
-import 'package:tracer/screens/scan_confirmation_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/gradient_border_button.dart';

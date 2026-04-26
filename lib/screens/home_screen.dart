@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tracer/screens/scan_screen.dart';
-import 'package:tracer/screens/settings_screen.dart';
 import 'package:tracer/utils/constants.dart';
 import 'package:tracer/widgets/gradient_border_button.dart';
 import 'package:tracer/widgets/gradient_border_text.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
-import '../screens/records_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

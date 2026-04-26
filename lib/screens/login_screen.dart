@@ -6,8 +6,6 @@ import '../widgets/gradient_icon.dart';
 import '../widgets/gradient_border_text.dart';
 import '../widgets/gradient_border_snackbar.dart';
 
-import 'signup_screen.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
