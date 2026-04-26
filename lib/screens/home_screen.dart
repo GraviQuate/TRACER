@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                         title: "Records",
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => RecordsScreen()));
+                                          Navigator.of(context).pushNamed('/records');
                                         },
                                       ),
                                       _HomeRoundedButton(
@@ -175,9 +175,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                         title: "Settings",
                                         onTap: () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (context) => SettingsScreen())
-                                          );
+                                          await Navigator.of(context).pushNamed('/settings');
                                         },
                                       ),
                                     ],
@@ -187,9 +185,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                                   GradientBorderButton(
                                     onPressed: () async {
-                                      await Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) => ScanScreen())
-                                      );
+                                      await Navigator.of(context).pushNamed('/scan');
                                     },
                                     borderRadius: BorderRadius.circular(30.0),
                                     gradient: LinearGradient(

@@ -205,7 +205,7 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
                               height: AppDesign.camBtnHeight,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
                                 },
                                 child: Icon(
                                   Icons.close,
@@ -228,10 +228,9 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
 
                               if (!context.mounted) return;
 
-                              await Navigator.of(context).pushReplacement(
-                                MaterialPageRoute<void>(
-                                  builder: (context) => DataVerificationScreen(transaction: transaction)
-                                )
+                              await Navigator.of(context).pushReplacementNamed(
+                                '/verification',
+                                arguments: transaction,
                               );
                             },
                             gradient: LinearGradient(colors: [
@@ -278,11 +277,10 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
                               height: AppDesign.camBtnHeight,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  await _openImagePicker();
-                                  setState(() {});
+                                  Navigator.of(context).pop();
                                 },
                                 child: Icon(
-                                  Icons.upload,
+                                  Icons.replay,
                                   size: AppDesign.sBtnIconSize,
                                   color: AppDesign.appOffblack,
                                 ),

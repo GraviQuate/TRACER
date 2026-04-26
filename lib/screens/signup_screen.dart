@@ -48,7 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           GradientBorderSnackbar(message: 'Sign up successful! Please check your email to verify your account and proceed to log in.')
         );
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       }
     // Handle sign up errors
     } catch (e) {
@@ -303,7 +303,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.of(context).pop();
                                       },
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,

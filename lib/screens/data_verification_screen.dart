@@ -518,9 +518,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                     "Data saved successfully!\nReceipt was also sent to student's email.",
                                                     GradientBorderButton(
                                                       onPressed: () async {
-                                                        Navigator.of(context).pop(); // NOTE: change to named routing
-                                                        Navigator.of(context).pop();
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context).popUntil(ModalRoute.withName('/'));
                                                       },
                                                       borderRadius: BorderRadius.circular(30.0),
                                                       gradient: LinearGradient(
