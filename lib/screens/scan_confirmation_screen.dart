@@ -219,7 +219,7 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
 
                               await Navigator.of(context).pushReplacementNamed(
                                 '/verification',
-                                arguments: transaction,
+                                arguments: {'transaction': transaction},
                               );
                             },
                             gradient: LinearGradient(colors: [

@@ -46,10 +46,13 @@ Future<void> main() async {
 
           }
           else if (settings.name == '/verification') {
-            final args = settings.arguments as Transaction;
+            final args = settings.arguments as Map<String, dynamic>? ?? {};
             return MaterialPageRoute(
               settings: settings,
-              builder: (context) => DataVerificationScreen(transaction: args)
+              builder: (context) => DataVerificationScreen(
+                transaction: args['transaction'] as Transaction,
+                isFromHomeScreen: args['isFromHomeScreen'] as bool? ?? false,
+              ),
             );
           }
           return null; // Fallback to the routes map below
