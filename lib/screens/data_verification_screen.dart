@@ -13,9 +13,15 @@ import 'package:tracer/utils/constants.dart';
 import 'package:tracer/models/transaction.dart';
 
 class DataVerificationScreen extends StatefulWidget {
-  DataVerificationScreen({super.key, required this.transaction});
-
   Transaction transaction;
+  final bool isFromHomeScreen;
+
+  DataVerificationScreen({
+    super.key,
+    required this.transaction,
+    this.isFromHomeScreen = false,
+  });
+
 
   @override
   DataVerificationScreenState createState() => DataVerificationScreenState();
@@ -607,43 +613,66 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                     ],
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5.0, right: 15.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.replay,
-                              size: AppDesign.sBtnIconSize,
-                              color: AppDesign.appOffblack,
-                            ),
-
-                            SizedBox(width: 10.0),
-
-                            const Text(
-                              "Retake photo",
-                              style: TextStyle(
-                                color: AppDesign.appOffblack,
-                                fontFamily: "AROneSans",
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ]
-                        ),
-                      )
-                    ),
+                  _TopStickyButton(
+                    text: widget.isFromHomeScreen ?
+                    'Back to Home' :
+                    'Retake Photo',
+                    iconData: widget.isFromHomeScreen ?
+                    Icons.arrow_back_rounded :
+                    Icons.replay,
                   ),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _TopStickyButton extends StatelessWidget {
+  final String text;
+  final IconData iconData;
+
+  const _TopStickyButton({
+    super.key,
+    required this.text,
+    required this.iconData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: ElevatedButton(
+        onPressed: () async {
+          Navigator.of(context).pop();
+        },
+        child: Padding(
+          padding: EdgeInsets.only(left: 5.0, right: 15.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                iconData,
+                size: AppDesign.sBtnIconSize,
+                color: AppDesign.appOffblack,
+              ),
+
+              SizedBox(width: 10.0),
+
+              Text(
+                text,
+                style: TextStyle(
+                  color: AppDesign.appOffblack,
+                  fontFamily: "AROneSans",
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            ]
+          ),
+        )
       ),
     );
   }
