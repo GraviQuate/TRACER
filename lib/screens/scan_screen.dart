@@ -2,15 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:image/image.dart' as img;
+import 'package:native_device_orientation/native_device_orientation.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../widgets/gradient_border_button.dart';
 import '../widgets/gradient_icon.dart';
 import '../utils/constants.dart';
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({super.key, required this.camera});
-
-  final CameraDescription camera;
+  const ScanScreen({super.key});
 
   @override
   ScanScreenState createState() => ScanScreenState();
@@ -19,14 +20,44 @@ class ScanScreen extends StatefulWidget {
 
 class ScanScreenState extends State<ScanScreen> {
   late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
+  late CameraDescription camera;
+  late Future<void> _cameraSetupFuture = Future.value();
 
-  @override
-  void initState() {
-    super.initState();
+  final _picker = ImagePicker();
+  File? _image;
+
+  Future<String> _correctImageOrientation(String imagePath, int rotationAngle) async {
+  final File file = File(imagePath);
+
+  img.Image? originalImage = img.decodeImage(file.readAsBytesSync());
+
+  if (originalImage == null) {
+    throw Exception("Could not decode image for rotation.");
+  }
+
+  if (rotationAngle != 0) {
+    originalImage = img.copyRotate(originalImage, angle: rotationAngle);
+  }
+
+  final correctedBytes = img.encodeJpg(originalImage);
+  await file.writeAsBytes(correctedBytes);
+
+  return file.path;
+}
+
+  Future<void> _openImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      _image = File(pickedImage.path);
+    }
+  }
+
+  Future<void> _initCamera() async {
+    camera = (await availableCameras())[0];
 
     _controller = CameraController(
-      widget.camera,
+      camera,
       ResolutionPreset.ultraHigh,
       enableAudio: false,
       imageFormatGroup: Platform.isAndroid  // reqd for google ml kit
@@ -34,75 +65,85 @@ class ScanScreenState extends State<ScanScreen> {
               : ImageFormatGroup.bgra8888
     );
 
-    _initializeControllerFuture = _controller.initialize();
+    final Future<void> initControllerFuture =  _controller.initialize();
+    await initControllerFuture;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraSetupFuture = _initCamera();
   }
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.maxFinite,
-        height: double.maxFinite,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+    // Size of the gesture hint / navbar at the bottom of the screen
+    final double bottomInset = MediaQuery.of(context).padding.bottom;
+
+    return Container(
+      width: double.maxFinite,
+      height: double.maxFinite,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+      ),
+      child: SafeArea(
+        bottom: false,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SafeArea(
-              child: Center(
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: AppDesign.camMaxWidth,
-                    maxHeight: AppDesign.camMaxHeight,
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: AppDesign.camMaxWidth,
+                  maxHeight: AppDesign.camMaxHeight,
+                ),
+                padding: const EdgeInsets.all(AppDesign.camBorderThickness),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppDesign.camOuterBorderRadius),
+                  gradient: const LinearGradient(
+                    colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  padding: const EdgeInsets.all(AppDesign.camBorderThickness),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppDesign.camOuterBorderRadius),
-                    gradient: const LinearGradient(
-                      colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                    ),
-                    boxShadow: AppDesign.defaultBoxShadows,
-                  ),
-                  child: SizedBox(
-                    child: FutureBuilder<void>(
-                      future: _initializeControllerFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          // If the Future is complete, display the preview.
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(AppDesign.camInnerBorderRadius),
-                            child: CameraPreview(_controller)
-                          );
-                        } else {
-                          // Otherwise, display a loading indicator.
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                      }
-                    ),
-                  ),
+                  boxShadow: AppDesign.defaultBoxShadows,
+                ),
+                child: FutureBuilder<void>(
+                  future: _cameraSetupFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // If the Future is complete, display the preview.
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(AppDesign.camInnerBorderRadius),
+                        child: CameraPreview(_controller)
+                      );
+                    } else {
+                      // Otherwise, display a loading indicator.
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  }
                 ),
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(
+              height: 10.0,
+            ),
 
             Container(
-              padding: const EdgeInsets.only(bottom: 20.0, top: 15.0) ,
+              // Factor in gesture hint / navbar space
+              height: 90.0 + bottomInset,
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0 + bottomInset, right: 10.0, left: 10.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: AppDesign.bottomBarBorderRadius,
@@ -112,17 +153,12 @@ class ScanScreenState extends State<ScanScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: 60.0,
-                    height: 50.0,
+                    width: AppDesign.camBtnWidth,
+                    height: AppDesign.camBtnHeight,
                     child: ElevatedButton(
-                      onPressed: () {
-
+                      onPressed: () async {
+                        Navigator.of(context).pop();
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        overlayColor: Colors.black,
-                        padding: EdgeInsets.zero,
-                      ),
                       child: GradientIcon(
                         icon: Icons.close,
                         size: AppDesign.sBtnIconSize,
@@ -135,13 +171,45 @@ class ScanScreenState extends State<ScanScreen> {
                   ),
 
                   SizedBox(
-                    width: 120.0,
-                    height: 50.0,
+                    width: AppDesign.camBtnWidth + 80.0,
+                    height: AppDesign.camBtnHeight + 5.0,
                     child: GradientBorderButton(
                       onPressed: () async {
-                        await Future.delayed(Duration(seconds: 3), () {
-                          print("3 seconds have passed");
-                        });
+                        try {
+                          await _cameraSetupFuture;
+
+                          if (!context.mounted) return;
+
+                          final deviceOrientation = await NativeDeviceOrientationCommunicator().orientation(useSensor: true);
+                          int rotationAngle = 0;
+
+                          if (deviceOrientation == NativeDeviceOrientation.landscapeRight) {
+                            rotationAngle = 90;
+                          } else if (deviceOrientation == NativeDeviceOrientation.landscapeLeft) {
+                            rotationAngle = 270;
+                          } else if (deviceOrientation == NativeDeviceOrientation.portraitDown) {
+                            rotationAngle = 180;
+                          }
+
+                          final image = await _controller.takePicture();
+                          final correctedImagePath = await _correctImageOrientation(image.path, rotationAngle);
+
+                          await _controller.pausePreview();
+
+                          if (!context.mounted) return;
+
+                          // If the picture was taken, display it on a new screen.
+                          await Navigator.of(context).pushNamed(
+                            '/scan_confirmation',
+                            arguments: correctedImagePath,
+                          );
+
+                          if (_controller.value.isInitialized) {
+                            await _controller.resumePreview();
+                          }
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        }
                       },
                       gradient: LinearGradient(colors: [
                           AppDesign.primaryGradientStart,
@@ -149,7 +217,7 @@ class ScanScreenState extends State<ScanScreen> {
                         ]),
                       borderRadius: AppDesign.sBtnBorderRadius,
                       child: GradientIcon(
-                        icon: Icons.camera_alt,
+                        icon: Icons.camera_rounded,
                         size: AppDesign.sBtnIconSize,
                         gradient: LinearGradient(colors: [
                           AppDesign.primaryGradientStart,
@@ -160,17 +228,35 @@ class ScanScreenState extends State<ScanScreen> {
                   ),
 
                   SizedBox(
-                    width: 60.0,
-                    height: 50.0,
+                    width: AppDesign.camBtnWidth,
+                    height: AppDesign.camBtnHeight,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await _controller.pausePreview();
 
+                        await _openImagePicker();
+
+                        if (_image == null) {
+                          if (_controller.value.isInitialized) {
+                            await _controller.resumePreview();
+                          }
+                          return;
+                        }
+
+                        if (!context.mounted) return;
+
+                        // If the picture a picture was chosen, display it on the new screen
+                        await Navigator.of(context).pushNamed(
+                          '/scan_confirmation',
+                          arguments: _image!.path,
+                        );
+
+                        _image = null;
+
+                        if (_controller.value.isInitialized) {
+                          await _controller.resumePreview();
+                        }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        overlayColor: Colors.black,
-                        padding: EdgeInsets.zero,
-                      ),
                       child: GradientIcon(
                         icon: Icons.upload,
                         size: AppDesign.sBtnIconSize,
@@ -186,7 +272,7 @@ class ScanScreenState extends State<ScanScreen> {
             )
           ],
         ),
-      )
+      ),
     );
   }
 }
