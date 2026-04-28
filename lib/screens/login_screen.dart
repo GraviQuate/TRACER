@@ -7,8 +7,6 @@ import '../widgets/gradient_border_text.dart';
 import '../widgets/gradient_border_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'signup_screen.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -253,10 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const SignupScreen()),
-                                        );
+                                        Navigator.of(context).pushNamed('/signup');
                                       },
                                       style: TextButton.styleFrom(
                                         padding: EdgeInsets.zero,

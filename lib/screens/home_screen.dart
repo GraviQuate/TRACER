@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tracer/screens/scan_screen.dart';
-import 'package:tracer/screens/settings_screen.dart';
 import 'package:tracer/utils/constants.dart';
 import 'package:tracer/widgets/gradient_border_button.dart';
 import 'package:tracer/widgets/gradient_border_text.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
-import '../screens/records_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -159,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                         title: "Records",
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => RecordsScreen()));
+                                          Navigator.of(context).pushNamed('/records');
                                         },
                                       ),
                                       _HomeRoundedButton(
@@ -175,9 +172,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                         title: "Settings",
                                         onTap: () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (context) => SettingsScreen())
-                                          );
+                                          await Navigator.of(context).pushNamed('/settings');
                                         },
                                       ),
                                     ],
@@ -187,9 +182,7 @@ class _HomeScreenState extends State<HomeScreen>
 
                                   GradientBorderButton(
                                     onPressed: () async {
-                                      await Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) => ScanScreen())
-                                      );
+                                      await Navigator.of(context).pushNamed('/scan');
                                     },
                                     borderRadius: BorderRadius.circular(30.0),
                                     gradient: LinearGradient(

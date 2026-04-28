@@ -20,7 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await authService.logOut();
 
     if (mounted) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
       ScaffoldMessenger.of(context).showSnackBar(
         GradientBorderSnackbar(message: 'Log out successful!')
       );
