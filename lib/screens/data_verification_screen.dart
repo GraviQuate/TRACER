@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:number_to_words_english/number_to_words_english.dart';
 import 'package:tracer/services/db_service.dart';
 import 'package:tracer/utils/formatters.dart';
+import 'package:tracer/widgets/error_snackbar.dart';
 import 'package:tracer/widgets/gradient_border_button.dart';
 import 'package:tracer/widgets/gradient_border_text_form_field.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
@@ -397,6 +398,9 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           LabeledField(
                                             label: "Amount",
                                             controller: _transactAmountController,
+                                            onChanged: (_) {
+                                              _transactAmountWordsController.text = _getAmtWords(_transactAmountController.text);
+                                            },
                                             formatters: [
                                               FilteringTextInputFormatter.digitsOnly,
                                             ],
@@ -495,60 +499,17 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                       GradientBorderButton(
                                         onPressed: () async {
+                                          _setTransactionFromFields();
+
+                                          if (widget.transaction.hasMissingRequiredValue()) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Please fill in all required fields!",)
+                                            );
+                                            return;
+                                          }
+
                                           try {
-                                            _setTransactionFromFields();
-
-                                            final List<Map<String, dynamic>> response =
-                                              await context.read<DbService>().insertTransaction(widget.transaction);
-
-                                            if (response.isNotEmpty) {
-                                              debugPrint('Transaction saved successfully! ID: ${response.first['id']}');
-
-                                              if (!context.mounted) return;
-
-                                              showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) {
-                                                  return _Popup(
-                                                    GradientIcon(
-                                                      icon: Icons.check_circle_outline,
-                                                      size: 48.0,
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          AppDesign.primaryGradientStart,
-                                                          AppDesign.primaryGradientEnd,
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    "Data saved successfully!\nReceipt was also sent to student's email.",
-                                                    GradientBorderButton(
-                                                      onPressed: () async {
-                                                        Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                                                      },
-                                                      borderRadius: BorderRadius.circular(30.0),
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          AppDesign.primaryGradientStart,
-                                                          AppDesign.primaryGradientEnd,
-                                                        ],
-                                                      ),
-                                                      child: Text(
-                                                        "Confirm",
-                                                        style: TextStyle(
-                                                          color: AppDesign.appOffblack,
-                                                          fontSize: 12.0,
-                                                          fontFamily: "AROneSans",
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              );
-                                            }
-                                          } catch (e) {
-                                            debugPrint('Upload Failed $e');
+                                            await context.read<DbService>().insertTransaction(widget.transaction);
 
                                             if (!context.mounted) return;
 
@@ -557,34 +518,46 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                               barrierDismissible: false,
                                               builder: (context) {
                                                 return _Popup(
-                                                  Icon(
-                                                    Icons.error,
+                                                  GradientIcon(
+                                                    icon: Icons.check_circle_outline,
                                                     size: 48.0,
-                                                    color: Colors.red,
-                                                  ),
-                                                  "Failed to upload the data!\nFailed to generate receipt! :(",
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context, rootNavigator: true).pop();
-                                                    },
-                                                    child: Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          "Ok",
-                                                          style: TextStyle(
-                                                            color: AppDesign.appOffblack,
-                                                            fontSize: 14.0,
-                                                            fontFamily: "AROneSans",
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppDesign.primaryGradientStart,
+                                                        AppDesign.primaryGradientEnd,
                                                       ],
+                                                    ),
+                                                  ),
+                                                  "Data saved successfully!\nReceipt was also sent to student's email.",
+                                                  GradientBorderButton(
+                                                    onPressed: () async {
+                                                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                                                    },
+                                                    borderRadius: BorderRadius.circular(30.0),
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        AppDesign.primaryGradientStart,
+                                                        AppDesign.primaryGradientEnd,
+                                                      ],
+                                                    ),
+                                                    child: Text(
+                                                      "Confirm",
+                                                      style: TextStyle(
+                                                        color: AppDesign.appOffblack,
+                                                        fontSize: 12.0,
+                                                        fontFamily: "AROneSans",
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
                                                 );
                                               }
+                                            );
+                                          } on DuplicateReceiptException {
+                                            if (!context.mounted) return;
+
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Receipt number already exists.\nAre you sure it is correct?",)
                                             );
                                           }
                                         },
@@ -782,6 +755,7 @@ class LabeledField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextCapitalization? textCapitalization;
   final VoidCallback? onTap;
+  final dynamic Function(String)? onChanged;
   final bool readOnly;
   final String? prefixText;
   final IconData suffixIcon;
@@ -796,6 +770,7 @@ class LabeledField extends StatelessWidget {
     this.keyboardType,
     this.textCapitalization,
     this.onTap,
+    this.onChanged,
     this.readOnly = false,
     this.prefixText,
     this.suffixIcon = Icons.edit_outlined,
@@ -817,6 +792,7 @@ class LabeledField extends StatelessWidget {
           textCapitalization: textCapitalization ?? TextCapitalization.none,
           readOnly: readOnly,
           onTap: onTap,
+          onChanged: onChanged,
           prefixText: prefixText,
 
           // Shared design properties

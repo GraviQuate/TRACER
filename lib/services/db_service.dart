@@ -19,23 +19,25 @@ class DbService {
     return service;
   }
 
-  Future<List<Map<String, dynamic>>> insertTransaction(Transaction transaction) async {
-    final response = await _client.from('transaction').insert(
-      {
-        "receiptno": transaction.receiptNum,
-        "studentid": transaction.stuNum,
-        "amount": transaction.transactAmount,
-        "amountwords": transaction.transactAmountWords,
-        "purpose": transaction.transactPurpose,
-        "finance_fn": transaction.foFirstName,
-        "finance_mi": transaction.foMiddleInitial,
-        "finance_ln": transaction.foLastName,
-        "receiptdate": "${transaction.transactYear}-${transaction.transactMonth}-${transaction.transactDay}",
+  Future<Transaction> insertTransaction(Transaction transaction) async {
+    try {
+      final response = await _client
+      .from('transaction')
+      .insert(transaction.toJson())
+      .select()
+      .single();
+
+      return Transaction.fromJson(response);
+    } on PostgrestException catch (e) {
+      if (e.code == '23505') {
+        throw DuplicateReceiptException();
       }
-    ).select();
 
-    return response;
+      throw Exception("Database Error: ${e.message}");
+    }
   }
-
-
 }
+
+
+// Custom exceptions
+class DuplicateReceiptException implements Exception {}

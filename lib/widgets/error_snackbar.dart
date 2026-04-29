@@ -12,7 +12,7 @@ class ErrorSnackbar extends SnackBar {
           backgroundColor: Colors.transparent,
           elevation: 0,
           behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          margin: const EdgeInsets.only(bottom: 20),
 
           // Animation of the snackbar
           content: TweenAnimationBuilder<double>(
@@ -30,6 +30,7 @@ class ErrorSnackbar extends SnackBar {
             // Container with red border
             child: Container(
               decoration: BoxDecoration(
+                color: Colors.white,
                 border: BoxBorder.all(
                   color: AppDesign.errorRed,
                   width: 2.0,
@@ -49,16 +50,18 @@ class ErrorSnackbar extends SnackBar {
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      errorMsg,
-                      style: const TextStyle(
-                        color: AppDesign.appOffblack,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "AROneSans"
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
+                      child: Text(
+                        errorMsg,
+                        style: const TextStyle(
+                          color: AppDesign.appOffblack,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "AROneSans"
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
