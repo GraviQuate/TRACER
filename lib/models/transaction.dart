@@ -74,7 +74,14 @@ class Transaction {
     };
   }
 
-  bool hasMissingRequiredValue() {
+  bool isEmpty() {
+    return [
+      stuFirstName, stuMiddleInitial, stuLastName, stuNum, receiptNum, transactDay, transactMonth, transactPurpose,
+      transactYear, transactAmount, transactAmountWords, foFirstName, foMiddleInitial, foLastName
+    ].every((field) => field == null || field.isEmpty);
+  }
+
+  bool isMissingRequiredValue() {
     return [
       stuFirstName, stuLastName, stuNum, receiptNum, transactDay, transactMonth, transactPurpose,
       transactYear, transactAmount, transactAmountWords, foFirstName, foLastName

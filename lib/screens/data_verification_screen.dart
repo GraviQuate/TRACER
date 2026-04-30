@@ -501,7 +501,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         onPressed: () async {
                                           _setTransactionFromFields();
 
-                                          if (widget.transaction.hasMissingRequiredValue()) {
+                                          if (widget.transaction.isMissingRequiredValue()) {
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               ErrorSnackbar(errorMsg: "Please fill in all required fields!",)
                                             );
@@ -513,51 +513,15 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                             if (!context.mounted) return;
 
-                                            showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (context) {
-                                                return _Popup(
-                                                  GradientIcon(
-                                                    icon: Icons.check_circle_outline,
-                                                    size: 48.0,
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        AppDesign.primaryGradientStart,
-                                                        AppDesign.primaryGradientEnd,
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  "Data saved successfully!\nReceipt was also sent to student's email.",
-                                                  GradientBorderButton(
-                                                    onPressed: () async {
-                                                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                                                    },
-                                                    borderRadius: BorderRadius.circular(30.0),
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        AppDesign.primaryGradientStart,
-                                                        AppDesign.primaryGradientEnd,
-                                                      ],
-                                                    ),
-                                                    child: Text(
-                                                      "Confirm",
-                                                      style: TextStyle(
-                                                        color: AppDesign.appOffblack,
-                                                        fontSize: 12.0,
-                                                        fontFamily: "AROneSans",
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            );
+                                            showSuccessDialog(context);
                                           } on DuplicateReceiptException {
-                                            if (!context.mounted) return;
-
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               ErrorSnackbar(errorMsg: "Receipt number already exists.\nAre you sure it is correct?",)
+                                            );
+                                          }
+                                          catch (e) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Unknown error,\nPlease try again later.",)
                                             );
                                           }
                                         },
@@ -574,7 +538,6 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           ),
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -593,6 +556,16 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                     iconData: widget.isFromHomeScreen ?
                     Icons.arrow_back_rounded :
                     Icons.replay,
+                    onPressed: () async {
+                      _setTransactionFromFields();
+
+                      if (!widget.transaction.isEmpty()) {
+                        showUnsavedDialog(context, "Wait! You have unsaved changes!");
+                        return;
+                      }
+
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),
@@ -602,16 +575,119 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
       ),
     );
   }
+
+  Future<dynamic> showSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _Popup(
+          GradientIcon(
+            icon: Icons.check_circle_outline,
+            size: 48.0,
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+          ),
+          "Data saved successfully!\nReceipt was also sent to student's email.",
+          GradientBorderButton(
+            onPressed: () async {
+              Navigator.of(context).popUntil(ModalRoute.withName('/'));
+            },
+            borderRadius: BorderRadius.circular(30.0),
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+            child: Text(
+              "Confirm",
+              style: TextStyle(
+                color: AppDesign.appOffblack,
+                fontSize: 14.0,
+                fontFamily: "AROneSans",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  Future<dynamic> showUnsavedDialog(BuildContext context, String message) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _Popup(
+          Icon(
+            Icons.error_outline_rounded,
+            size: 48.0,
+            color: AppDesign.errorRed,
+          ),
+          message,
+          GradientBorderButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+            borderRadius: BorderRadius.circular(30.0),
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+            child: Text(
+              "Go back",
+              style: TextStyle(
+                color: AppDesign.appOffblack,
+                fontSize: 14.0,
+                fontFamily: "AROneSans",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          btn2: GradientBorderButton(
+            onPressed: () async {
+              if (widget.isFromHomeScreen) {
+                Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                return;
+              }
+              Navigator.of(context).popUntil(ModalRoute.withName('/scan'));
+            },
+            gradient: LinearGradient(colors: [AppDesign.errorRed, AppDesign.errorRed]),
+            borderRadius: BorderRadius.circular(30.0),
+            child: Text(
+              "Discard",
+              style: TextStyle(
+                color: AppDesign.appOffblack,
+                fontSize: 14.0,
+                fontFamily: "AROneSans",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        );
+      }
+    );
+  }
 }
 
 class _TopStickyButton extends StatelessWidget {
   final String text;
   final IconData iconData;
+  final VoidCallback onPressed;
 
   const _TopStickyButton({
     super.key,
     required this.text,
     required this.iconData,
+    required this.onPressed,
   });
 
   @override
@@ -619,9 +695,7 @@ class _TopStickyButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ElevatedButton(
-        onPressed: () async {
-          Navigator.of(context).pop();
-        },
+        onPressed: onPressed,
         child: Padding(
           padding: EdgeInsets.only(left: 5.0, right: 15.0),
           child: Row(
@@ -655,12 +729,14 @@ class _Popup extends StatelessWidget {
   const _Popup(
     this.icon,
     this.dialog,
-    this.btn,
-  );
+    this.btn1, {
+    this.btn2,
+  });
 
   final Widget icon;
   final String dialog;
-  final Widget btn;
+  final Widget btn1;
+  final Widget? btn2;
 
   @override
   Widget build(BuildContext context) {
@@ -687,21 +763,32 @@ class _Popup extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: 20.0,
             children: [
-              icon,
+              Column(
+                spacing: 8.0,
+                children: [
+                  icon,
 
-              Text(
-                dialog,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppDesign.appOffblack,
-                  fontSize: 14.0,
-                  fontFamily: "AROneSans",
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none
-                ),
+                  Text(
+                    dialog,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppDesign.appOffblack,
+                      fontSize: 14.0,
+                      fontFamily: "AROneSans",
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none
+                    ),
+                  ),
+                ],
               ),
 
-              btn,
+              Column(
+                spacing: 12.0,
+                children: [
+                  btn1,
+                  ?btn2,
+                ],
+              ),
             ],
           ),
         ),
