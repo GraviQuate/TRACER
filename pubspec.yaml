@@ -109,6 +109,7 @@ flutter:
     - family: Iceland
       fonts:
         - asset: assets/fonts/Iceland.ttf
+        - asset: assets/fonts/IBMPlexSans.ttf
     - family: AROneSans
       fonts:
         - asset: assets/fonts/AROneSans.ttf
