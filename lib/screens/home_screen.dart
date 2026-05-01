@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   flex: 5,
                                   child: _HomeRoundedButton(
                                     gradientIcon: GradientIcon(
-                                      icon: Icons.account_circle_outlined,
+                                      icon: Icons.account_circle_rounded,
                                       size: 24.0,
                                       gradient: LinearGradient(
                                         colors: [
