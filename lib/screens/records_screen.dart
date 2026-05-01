@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/constants.dart';
 import '../models/transaction.dart';
 import '../widgets/gradient_icon.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RecordsScreen extends StatefulWidget {
   const RecordsScreen({super.key});
@@ -20,29 +21,82 @@ class _RecordsScreenState extends State<RecordsScreen> {
   List<Transaction> _filteredRecords = [];
   bool _isLoading = true;
 
+  // Filter state
+  bool _showFilters = false;
+  DateTime? _fromDate;
+  DateTime? _toDate;
+  String? _selectedFoName;
+  List<String> _foNameOptions = [];
+
+  // Organization
+  String? _currentOrgId;
+
   @override
   void initState() {
     super.initState();
-    _fetchRecords();
-    _searchController.addListener(_onSearchChanged);
+    _loadOrgAndRecords();
+    _searchController.addListener(_applyFilters);
   }
 
-  // Methods for data fetching and processing
+  // Method for loading organization and records
+  Future<void> _loadOrgAndRecords() async {
+    try {
+      final userId = Supabase.instance.client.auth.currentSession?.user.id;
+      if (userId == null) return;
+
+      final foResponse = await Supabase.instance.client
+          .from('finance_officers')
+          .select('organization_id')
+          .eq('user_id', userId)
+          .single();
+
+      if (mounted) {
+        setState(() {
+          _currentOrgId = foResponse['organization_id'] as String?;
+        });
+      }
+
+      await _fetchRecords();
+    } catch (e) {
+      debugPrint('Error loading org: $e');
+    }
+  }
+
+  // Methods for fetching filtered data and processing 
   Future<void> _fetchRecords() async {
+    if (_currentOrgId == null) return;
+
     try {
       final response = await Supabase.instance.client
-          .from('transaction') 
+          .from('updtransaction')
           .select()
-          .order('receiptdate', ascending: false); // Sort by newest
+          .eq('organization_id', _currentOrgId!)
+          .order('receiptdate', ascending: false);
 
       final data = (response as List)
           .map((item) => Transaction.fromJson(item))
           .toList();
 
+      // Extract unique finance officer names for the filter dropdown
+      final foNames = data
+          .map((r) {
+            final fn = r.foFirstName ?? '';
+            final mi = (r.foMiddleInitial?.isNotEmpty == true)
+                ? "${r.foMiddleInitial}. "
+                : "";
+            final ln = r.foLastName ?? '';
+            return "$fn $mi$ln".trim();
+          })
+          .where((name) => name.isNotEmpty)
+          .toSet()
+          .toList()
+        ..sort();
+
       if (mounted) {
         setState(() {
           _allRecords = data;
           _filteredRecords = data;
+          _foNameOptions = foNames;
           _isLoading = false;
         });
       }
@@ -54,24 +108,440 @@ class _RecordsScreenState extends State<RecordsScreen> {
     }
   }
 
-  // Search logic
-  void _onSearchChanged() {
+  // Filtering logic
+  void _applyFilters() {
     final query = _searchController.text.toLowerCase();
+
     setState(() {
       _filteredRecords = _allRecords.where((record) {
+
+        // --- Search ---
         final title = record.transactPurpose?.toLowerCase() ?? '';
         final id = record.receiptNum?.toLowerCase() ?? '';
         final foFirstName = record.foFirstName?.toLowerCase() ?? '';
         final foMiddleInitial = (record.foMiddleInitial?.isNotEmpty == true)
-          ? "${record.foMiddleInitial}.".toLowerCase()
-          : "";
+            ? "${record.foMiddleInitial}.".toLowerCase()
+            : "";
         final foLastName = record.foLastName?.toLowerCase() ?? '';
         final foName = "$foFirstName $foMiddleInitial $foLastName".trim();
-        return title.contains(query) || id.contains(query) ||
-            foFirstName.contains(query) || foMiddleInitial.contains(query) ||
-            foLastName.contains(query) || foName.contains(query);
+
+        final matchesSearch = query.isEmpty ||
+            title.contains(query) ||
+            id.contains(query) ||
+            foFirstName.contains(query) ||
+            foMiddleInitial.contains(query) ||
+            foLastName.contains(query) ||
+            foName.contains(query);
+
+        // --- Date Range ---
+        bool matchesDate = true;
+        if (_fromDate != null || _toDate != null) {
+          final year = int.tryParse(record.transactYear ?? '');
+          final month = int.tryParse(record.transactMonth ?? '');
+          final day = int.tryParse(record.transactDay ?? '');
+
+          if (year != null && month != null && day != null) {
+            final recordDate = DateTime(year, month, day);
+            if (_fromDate != null && recordDate.isBefore(_fromDate!)) {
+              matchesDate = false;
+            }
+            if (_toDate != null && recordDate.isAfter(_toDate!.add(const Duration(days: 1)))) {
+              matchesDate = false;
+            }
+          } else {
+            matchesDate = false;
+          }
+        }
+
+        // --- Finance Officer Name ---
+        bool matchesFo = true;
+        if (_selectedFoName != null) {
+          final fn = record.foFirstName ?? '';
+          final mi = (record.foMiddleInitial?.isNotEmpty == true)
+              ? "${record.foMiddleInitial}. "
+              : "";
+          final ln = record.foLastName ?? '';
+          final fullName = "$fn $mi$ln".trim();
+          matchesFo = fullName == _selectedFoName;
+        }
+
+        return matchesSearch && matchesDate && matchesFo;
       }).toList();
     });
+  }
+
+  // Clear all filters
+  void _clearFilters() {
+    setState(() {
+      _fromDate = null;
+      _toDate = null;
+      _selectedFoName = null;
+    });
+    _applyFilters();
+  }
+
+  bool get _hasActiveFilters =>
+      _fromDate != null || _toDate != null || _selectedFoName != null;
+
+  // Date picker helper
+  Future<void> _pickDate(bool isFrom) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isFrom) {
+          _fromDate = picked;
+        } else {
+          _toDate = picked;
+        }
+      });
+      _applyFilters();
+    }
+  }
+
+  // Format date for display
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Select';
+    final months = ['Jan','Feb','Mar','Apr','May','Jun',
+                    'Jul','Aug','Sep','Oct','Nov','Dec'];
+    return "${months[date.month - 1]} ${date.day}, ${date.year}";
+  }
+
+  void _showRecordDetails(Transaction record) {
+    // Format date
+    final months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    final monthNum = int.tryParse(record.transactMonth ?? '');
+    final monthName = (monthNum != null && monthNum >= 1 && monthNum <= 12)
+        ? months[monthNum - 1]
+        : record.transactMonth ?? '';
+    final dateString = "$monthName, ${record.transactDay} ${record.transactYear}";
+
+    // Format finance officer name
+    final foMi = (record.foMiddleInitial?.isNotEmpty == true)
+        ? "${record.foMiddleInitial}. "
+        : "";
+    final foName = "${record.foFirstName ?? ''} $foMi${record.foLastName ?? ''}".trim();
+
+    // Format student name
+    final stuMi = (record.stuMiddleInitial?.isNotEmpty == true)
+        ? "${record.stuMiddleInitial}. "
+        : "";
+    final stuName = "${record.stuFirstName ?? ''} $stuMi${record.stuLastName ?? ''}".trim();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
+      ),
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(24, 24, 0, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Record no.',
+                      style: TextStyle(
+                        fontFamily: "AROneSans",
+                        fontSize: 13,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      record.receiptNum ?? '---',
+                      style: const TextStyle(
+                        fontFamily: "AROneSans",
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                // Close button
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.close, size: 20, color: Colors.black54),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Gradient divider
+            Container(
+              height: 2,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Details rows
+            _buildDetailRow('Date', dateString),
+            _buildDetailRow('Amount', 'Php ${record.transactAmount}'),
+            _buildDetailRow('Description', record.transactPurpose ?? '---'),
+
+            const SizedBox(height: 12),
+
+            _buildDetailRow('Finance Officer', foName.isEmpty ? '---' : foName),
+            _buildDetailRow('Student Treasurer', stuName.isEmpty ? '---' : stuName),
+            _buildDetailRow('Student ID', _formatStudentId(record.stuNum)),
+
+            const SizedBox(height: 20),
+
+            // Bottom graphic
+            Align(
+              alignment: Alignment.bottomRight,
+              child: SvgPicture.asset(
+                'assets/images/svg/expanded_records_screen_bottom_graphic.svg',
+                height: 150,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper to format student ID with dashes
+  String _formatStudentId(String? id) {
+    if (id == null || id.isEmpty) return '---';
+    final digits = id.replaceAll('-', '');
+    if (digits.length >= 13) {
+      return '${digits.substring(0, 4)}-${digits.substring(4, 8)}-${digits.substring(8, 13)}';
+    }
+    return id;
+  }
+
+  // Helper for each detail row in the bottom sheet
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontFamily: "AROneSans",
+                fontSize: 14,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontFamily: "AROneSans",
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterPanel() {
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Date Range
+          const Text(
+            "Date Range",
+            style: TextStyle(
+              fontFamily: "AROneSans",
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _pickDate(true),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _fromDate == null ? 'From' : _formatDate(_fromDate),
+                          style: TextStyle(
+                            fontFamily: "AROneSans",
+                            fontSize: 13,
+                            color: _fromDate == null ? Colors.black38 : Colors.black87,
+                          ),
+                        ),
+                        const Icon(Icons.calendar_today, size: 14, color: Colors.black38),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _pickDate(false),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _toDate == null ? 'To' : _formatDate(_toDate),
+                          style: TextStyle(
+                            fontFamily: "AROneSans",
+                            fontSize: 13,
+                            color: _toDate == null ? Colors.black38 : Colors.black87,
+                          ),
+                        ),
+                        const Icon(Icons.calendar_today, size: 14, color: Colors.black38),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          // Finance Officer filter
+          const Text(
+            "Finance Officer",
+            style: TextStyle(
+              fontFamily: "AROneSans",
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black12),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedFoName,
+                isExpanded: true,
+                borderRadius: BorderRadius.circular(10),
+                dropdownColor: Colors.white,
+                hint: const Text(
+                  'All finance officers',
+                  style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
+                ),
+                style: const TextStyle(
+                  fontFamily: "AROneSans",
+                  fontSize: 13,
+                  color: Colors.black87,
+                ),
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All finance officers',
+                        style: TextStyle(fontFamily: "AROneSans", fontSize: 13)),
+                  ),
+                  ..._foNameOptions.map(
+                    (name) => DropdownMenuItem(
+                      value: name,
+                      child: Text(name,
+                          style: const TextStyle(
+                              fontFamily: "AROneSans", fontSize: 13)),
+                    ),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() => _selectedFoName = value);
+                  _applyFilters();
+                },
+              ),
+            ),
+          ),
+
+          // Clear filters button
+          if (_hasActiveFilters) ...[
+            const SizedBox(height: 14),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: _clearFilters,
+                icon: const Icon(Icons.clear, size: 16),
+                label: const Text(
+                  'Clear Filters',
+                  style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppDesign.primaryGradientStart,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
   // User interface
@@ -126,25 +596,26 @@ class _RecordsScreenState extends State<RecordsScreen> {
 
                         const SizedBox(height: 20.0),
 
-                        // Gradient search bar
-                        Container(
-                          height: 50,
-                          padding: const EdgeInsets.all(3), // border width
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            gradient: const LinearGradient(
-                              colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(23),
-                            ),
-                            padding: const EdgeInsets.fromLTRB(20, 7, 10, 0),
-                            child: Row(
-                              children: [
-                                Expanded(
+                        // Search bar + filter button row
+                        Row(
+                          children: [
+                            // Search bar
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  gradient: const LinearGradient(
+                                    colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(23),
+                                  ),
+                                  padding: const EdgeInsets.fromLTRB(20, 7, 10, 0),
                                   child: TextField(
                                     controller: _searchController,
                                     style: const TextStyle(
@@ -169,9 +640,50 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                     ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+
+                            const SizedBox(width: 10),
+
+                            // Filter button
+                            GestureDetector(
+                              onTap: () => setState(() => _showFilters = !_showFilters),
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  gradient: const LinearGradient(
+                                    colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _hasActiveFilters ? null : Colors.white,
+                                    gradient: _hasActiveFilters
+                                        ? const LinearGradient(
+                                            colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                                          )
+                                        : null,
+                                    borderRadius: BorderRadius.circular(23),
+                                  ),
+                                  child: Icon(
+                                    Icons.tune,
+                                    size: AppDesign.sBtnIconSize,
+                                    color: _hasActiveFilters ? Colors.white : AppDesign.primaryGradientStart,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Expandable filter panel
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInOut,
+                          child: _showFilters ? _buildFilterPanel() : const SizedBox.shrink(),
                         ),
 
                         const SizedBox(height: 20),
@@ -280,9 +792,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // TODO: Navigate to record details screen
-        },
+        onTap: () => _showRecordDetails(record),
         borderRadius: BorderRadius.circular(4),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 1.0),

@@ -49,6 +49,9 @@ class Transaction {
     return Transaction(
       receiptNum: json['receiptno']?.toString() ?? '',
       stuNum: json['studentid']?.toString() ?? '',
+      stuFirstName: json['stud_fn']?.toString() ?? '',
+      stuMiddleInitial: json['stud_mi']?.toString() ?? '',
+      stuLastName: json['stud_ln']?.toString() ?? '',
       transactAmount: json['amount']?.toString() ?? '0.00',
       transactAmountWords: json['amountwords']?.toString() ?? '',
       transactPurpose: json['purpose']?.toString() ?? 'No Purpose',
