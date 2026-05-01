@@ -12,6 +12,7 @@ import 'package:tracer/widgets/gradient_icon.dart';
 
 import 'package:tracer/utils/constants.dart';
 import 'package:tracer/models/transaction.dart';
+import 'package:tracer/widgets/titled_card.dart';
 
 class DataVerificationScreen extends StatefulWidget {
   Transaction transaction;
@@ -240,7 +241,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         style: AppDesign.subHeading2Style,
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Student Details",
                                         children: [
                                           LabeledField(
@@ -310,7 +311,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ],
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Transaction Details",
                                         children: [
                                           Row(
@@ -430,7 +431,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ],
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Finance Officer Details",
                                         children: [
                                           LabeledField(
@@ -758,39 +759,6 @@ class _Popup extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class VerificationSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const VerificationSection({
-    super.key,
-    required this.title,
-    required this.children,
-    });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: AppDesign.defaultBoxShadows,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: Column(
-        spacing: 5.0,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: AppDesign.subHeading1Style),
-          const Divider(color: Colors.grey),
-          ...children,
-        ],
       ),
     );
   }
