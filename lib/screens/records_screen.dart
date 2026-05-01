@@ -383,163 +383,216 @@ class _RecordsScreenState extends State<RecordsScreen> {
   Widget _buildFilterPanel() {
     return Container(
       margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black12),
+        gradient: const LinearGradient(
+          colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Date Range
-          const Text(
-            "Date Range",
-            style: TextStyle(
-              fontFamily: "AROneSans",
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              color: Colors.black54,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Date Range
+            const Text(
+              "Date Range",
+              style: TextStyle(
+                fontFamily: "AROneSans",
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.black54,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _pickDate(true),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _fromDate == null ? 'From' : _formatDate(_fromDate),
-                          style: TextStyle(
-                            fontFamily: "AROneSans",
-                            fontSize: 13,
-                            color: _fromDate == null ? Colors.black38 : Colors.black87,
-                          ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => _pickDate(true),
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        gradient: const LinearGradient(
+                          colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
                         ),
-                        const Icon(Icons.calendar_today, size: 14, color: Colors.black38),
-                      ],
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(23),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _fromDate == null ? 'From' : _formatDate(_fromDate),
+                              style: TextStyle(
+                                fontFamily: "AROneSans",
+                                fontSize: 13,
+                                color: _fromDate == null ? Colors.black38 : Colors.black87,
+                              ),
+                            ),
+                            GradientIcon(
+                              icon: Icons.calendar_today,
+                              size: 14,
+                              gradient: const LinearGradient(colors: [
+                                AppDesign.primaryGradientStart,
+                                AppDesign.primaryGradientEnd,
+                              ]),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _pickDate(false),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _toDate == null ? 'To' : _formatDate(_toDate),
-                          style: TextStyle(
-                            fontFamily: "AROneSans",
-                            fontSize: 13,
-                            color: _toDate == null ? Colors.black38 : Colors.black87,
-                          ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => _pickDate(false),
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        gradient: const LinearGradient(
+                          colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
                         ),
-                        const Icon(Icons.calendar_today, size: 14, color: Colors.black38),
-                      ],
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(23),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _toDate == null ? 'To' : _formatDate(_toDate),
+                              style: TextStyle(
+                                fontFamily: "AROneSans",
+                                fontSize: 13,
+                                color: _toDate == null ? Colors.black38 : Colors.black87,
+                              ),
+                            ),
+                            GradientIcon(
+                              icon: Icons.calendar_today,
+                              size: 14,
+                              gradient: const LinearGradient(colors: [
+                                AppDesign.primaryGradientStart,
+                                AppDesign.primaryGradientEnd,
+                              ]),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 14),
+
+            // Finance Officer filter
+            const Text(
+              "Finance Officer",
+              style: TextStyle(
+                fontFamily: "AROneSans",
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: const LinearGradient(
+                  colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                ),
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(23),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedFoName,
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(16),
+                    icon: GradientIcon(
+                      icon: Icons.arrow_drop_down,
+                      size: AppDesign.sBtnIconSize,
+                      gradient: LinearGradient(colors: [
+                        AppDesign.primaryGradientStart,
+                        AppDesign.primaryGradientEnd,
+                      ]),
+                    ),
+                    hint: const Text(
+                      'All finance officers',
+                      style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
+                    ),
+                    style: const TextStyle(
+                      fontFamily: "AROneSans",
+                      fontSize: 13,
+                      color: Colors.black87,
+                    ),
+                    items: [
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text('All finance officers',
+                            style: TextStyle(fontFamily: "AROneSans", fontSize: 13)),
+                      ),
+                      ..._foNameOptions.map(
+                        (name) => DropdownMenuItem(
+                          value: name,
+                          child: Text(name,
+                              style: const TextStyle(
+                                  fontFamily: "AROneSans", fontSize: 13)),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() => _selectedFoName = value);
+                      _applyFilters();
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            // Clear filters button
+            if (_hasActiveFilters) ...[
+              const SizedBox(height: 14),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: _clearFilters,
+                  icon: const Icon(Icons.clear, size: 16),
+                  label: const Text(
+                    'Clear Filters',
+                    style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFFF44336), 
                   ),
                 ),
               ),
             ],
-          ),
-
-          const SizedBox(height: 14),
-
-          // Finance Officer filter
-          const Text(
-            "Finance Officer",
-            style: TextStyle(
-              fontFamily: "AROneSans",
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-              color: Colors.black54,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.black12),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _selectedFoName,
-                isExpanded: true,
-                borderRadius: BorderRadius.circular(10),
-                dropdownColor: Colors.white,
-                hint: const Text(
-                  'All finance officers',
-                  style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
-                ),
-                style: const TextStyle(
-                  fontFamily: "AROneSans",
-                  fontSize: 13,
-                  color: Colors.black87,
-                ),
-                items: [
-                  const DropdownMenuItem(
-                    value: null,
-                    child: Text('All finance officers',
-                        style: TextStyle(fontFamily: "AROneSans", fontSize: 13)),
-                  ),
-                  ..._foNameOptions.map(
-                    (name) => DropdownMenuItem(
-                      value: name,
-                      child: Text(name,
-                          style: const TextStyle(
-                              fontFamily: "AROneSans", fontSize: 13)),
-                    ),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() => _selectedFoName = value);
-                  _applyFilters();
-                },
-              ),
-            ),
-          ),
-
-          // Clear filters button
-          if (_hasActiveFilters) ...[
-            const SizedBox(height: 14),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: _clearFilters,
-                icon: const Icon(Icons.clear, size: 16),
-                label: const Text(
-                  'Clear Filters',
-                  style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
-                ),
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFFF44336), 
-                ),
-              ),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -624,6 +677,11 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                     ),
                                     decoration: InputDecoration(
                                       hintText: "Search records...",
+                                      hintStyle: const TextStyle(
+                                        fontFamily: "AROneSans",
+                                        fontSize: 13.0,
+                                        color: Colors.black38,
+                                      ),
                                       border: InputBorder.none,
                                       isDense: true,
                                       suffixIcon: Padding(
@@ -763,8 +821,17 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                   : ListView.separated(
                                       padding: const EdgeInsets.only(bottom: 20),
                                       itemCount: _filteredRecords.length,
-                                      separatorBuilder: (context, index) => 
-                                          const Divider(height: 20, color: Colors.black12),
+                                      separatorBuilder: (context, index) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10),
+                                          child: Container(
+                                            height: 2,
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       itemBuilder: (context, index) {
                                         final record = _filteredRecords[index];
                                         return _buildRecordRow(record);
@@ -821,7 +888,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                 ),
               ),
               
-              // Title and date
+              // Title, date and finance officer name
               Expanded(
                 flex: 3,
                 child: Column(

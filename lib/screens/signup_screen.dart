@@ -337,7 +337,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                                   value: _selectedOrgId,
                                                   isExpanded: true,
                                                   borderRadius: BorderRadius.circular(16),
-                                                  dropdownColor: Colors.white,
                                                   icon: GradientIcon(
                                                     icon: Icons.arrow_drop_down,
                                                     size: AppDesign.sBtnIconSize,
