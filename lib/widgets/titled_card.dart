@@ -3,11 +3,13 @@ import 'package:tracer/utils/constants.dart';
 
 class TitledCard extends StatelessWidget {
   final String title;
+  final Widget? icon;
   final List<Widget> children;
 
   const TitledCard({
     super.key,
     required this.title,
+    this.icon,
     required this.children,
     });
 
@@ -25,7 +27,13 @@ class TitledCard extends StatelessWidget {
         spacing: 5.0,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppDesign.subHeading1Style),
+          Row(
+            spacing: 8.0,
+            children: [
+              ?icon,
+              Text(title, style: AppDesign.subHeading1Style),
+            ],
+          ),
           const Divider(color: Colors.grey),
           ...children,
         ],
