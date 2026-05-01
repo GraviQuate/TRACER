@@ -29,10 +29,10 @@ abstract class AppDesign {
     letterSpacing: -0.5,
   );
 
-  // Use for Section Headers or Card Titles
+  // Use for Section Headers or Card Titles, normal weight
   static const TextStyle subHeading1Style = TextStyle(
     fontSize: 18.0,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.normal,
     color: appOffblack,
   );
 
