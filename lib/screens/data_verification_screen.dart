@@ -243,6 +243,14 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                       TitledCard(
                                         title: "Student Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.account_circle_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
                                           LabeledField(
                                             label: "First Name",
@@ -313,6 +321,14 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                       TitledCard(
                                         title: "Transaction Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.credit_card_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -433,6 +449,14 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                       TitledCard(
                                         title: "Finance Officer Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.stars_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
                                           LabeledField(
                                             label: "First Name",
