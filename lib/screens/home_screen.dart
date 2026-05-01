@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   flex: 5,
                                   child: _HomeRoundedButton(
                                     gradientIcon: GradientIcon(
-                                      icon: Icons.settings,
+                                      icon: Icons.account_circle_outlined,
                                       size: 24.0,
                                       gradient: LinearGradient(
                                         colors: [
@@ -156,9 +156,9 @@ class _HomeScreenState extends State<HomeScreen>
                                         ]
                                       )
                                     ),
-                                    title: "Settings",
+                                    title: "Profile",
                                     onTap: () async {
-                                      await Navigator.of(context).pushNamed('/settings');
+                                      await Navigator.of(context).pushNamed('/profile');
                                     },
                                   ),
                                 ),

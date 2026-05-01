@@ -4,14 +4,14 @@ import '../utils/constants.dart';
 import '../widgets/gradient_border_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   // Auth service instance
   final authService = AuthService(Supabase.instance.client);
 
