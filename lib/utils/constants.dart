@@ -19,6 +19,47 @@ abstract class AppDesign {
 
   // --- General Design Constants ---
 
+  // Text Styles
+
+  // Use for Screen Titles
+  static const TextStyle headingStyle = TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w600,
+    color: appOffblack,
+    letterSpacing: -0.5,
+  );
+
+  // Use for Section Headers or Card Titles
+  static const TextStyle subHeading1Style = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.w500,
+    color: appOffblack,
+  );
+
+  // Slightly larger than body text, in normal weight
+  static const TextStyle subHeading2Style = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+  );
+
+  // Standard body text for descriptions and messages
+  static const TextStyle bodyStyle = TextStyle(
+    fontFamily: 'IBMPlexSans', // Needed for _Popup
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+    height: 1.4,
+  );
+
+  /// Specific style for Button labels
+  static const TextStyle buttonTextStyle = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+  );
+
+  // Box Shadows
   static final defaultBoxShadows = [
     BoxShadow(
       color: Colors.black.withValues(alpha: 0.14),

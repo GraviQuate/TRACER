@@ -25,6 +25,7 @@ Future<void> main() async {
 
       child: MaterialApp(
         theme: ThemeData(
+          fontFamily: 'IBMPlexSans',
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,

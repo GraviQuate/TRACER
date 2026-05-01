@@ -236,13 +236,8 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        "Please confirm the details are correct",
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: AppDesign.appOffblack,
-                                          fontFamily: "AROneSans",
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        'Please confirm the details are correct',
+                                        style: AppDesign.subHeading2Style,
                                       ),
 
                                       VerificationSection(
@@ -266,7 +261,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     LabeledField(
-                                                      label: "Middle Initial",
+                                                      label: "M.I.",
                                                       controller: _stuMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
@@ -458,7 +453,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     LabeledField(
-                                                      label: "Middle Initial",
+                                                      label: "M.I.",
                                                       controller: _foMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
@@ -531,11 +526,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ),
                                         child: const Text(
                                           "Upload to Database",
-                                          style: TextStyle(
-                                            color: AppDesign.appOffblack,
-                                            fontSize: 14.0,
-                                            fontFamily: "AROneSans",
-                                          ),
+                                          style: AppDesign.buttonTextStyle,
                                         ),
                                       ),
                                     ],
@@ -606,12 +597,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
             ),
             child: Text(
               "Confirm",
-              style: TextStyle(
-                color: AppDesign.appOffblack,
-                fontSize: 14.0,
-                fontFamily: "AROneSans",
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppDesign.buttonTextStyle,
             ),
           ),
         );
@@ -644,12 +630,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
             ),
             child: Text(
               "Go back",
-              style: TextStyle(
-                color: AppDesign.appOffblack,
-                fontSize: 14.0,
-                fontFamily: "AROneSans",
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppDesign.buttonTextStyle,
             ),
           ),
           btn2: GradientBorderButton(
@@ -664,12 +645,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
             borderRadius: BorderRadius.circular(30.0),
             child: Text(
               "Discard",
-              style: TextStyle(
-                color: AppDesign.appOffblack,
-                fontSize: 14.0,
-                fontFamily: "AROneSans",
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppDesign.buttonTextStyle,
             ),
           ),
         );
@@ -711,11 +687,7 @@ class _TopStickyButton extends StatelessWidget {
 
               Text(
                 text,
-                style: TextStyle(
-                  color: AppDesign.appOffblack,
-                  fontFamily: "AROneSans",
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppDesign.buttonTextStyle,
               )
             ]
           ),
@@ -771,13 +743,7 @@ class _Popup extends StatelessWidget {
                   Text(
                     dialog,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppDesign.appOffblack,
-                      fontSize: 14.0,
-                      fontFamily: "AROneSans",
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none
-                    ),
+                    style: AppDesign.bodyStyle.copyWith(decoration: TextDecoration.none),
                   ),
                 ],
               ),
@@ -821,12 +787,7 @@ class VerificationSection extends StatelessWidget {
         spacing: 5.0,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(
-            color: AppDesign.appOffblack,
-            fontSize: 18.0,
-            fontFamily: "AROneSans",
-            fontWeight: FontWeight.bold,
-          )), // Use a constant style
+          Text(title, style: AppDesign.subHeading1Style),
           const Divider(color: Colors.grey),
           ...children,
         ],
@@ -870,7 +831,7 @@ class LabeledField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12.0, fontFamily: "AROneSans", fontWeight: FontWeight.bold)),
+        Text(label, style: AppDesign.bodyStyle),
         const SizedBox(height: 5),
         GradientTextFormField(
           controller: controller,

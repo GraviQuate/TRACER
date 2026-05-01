@@ -232,25 +232,12 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
                               children: [
                                 Opacity(
                                   opacity: _fadeOutAnimation.value,
-                                  child: Text(
-                                    "Next",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontFamily: "AROneSans",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  child: Text('Next', style: AppDesign.buttonTextStyle),
                                 ),
 
                                 Opacity(
                                   opacity: _fadeInAnimation.value,
-                                  child: Text(
-                                    "Processing...",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontFamily: "AROneSans",
-                                    ),
-                                  ),
+                                  child: Text('Processing...', style: AppDesign.buttonTextStyle),
                                 )
                               ]
                             ),

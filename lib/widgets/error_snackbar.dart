@@ -55,11 +55,7 @@ class ErrorSnackbar extends SnackBar {
                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
                       child: Text(
                         errorMsg,
-                        style: const TextStyle(
-                          color: AppDesign.appOffblack,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "AROneSans"
-                        ),
+                        style: AppDesign.buttonTextStyle,
                         textAlign: TextAlign.center,
                       ),
                     ),
