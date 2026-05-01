@@ -265,31 +265,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
 
-                                // Middle name field
-                                const SizedBox(height: 12),
-                                TextField(
-                                  controller: _middleInitialController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  decoration: InputDecoration(
-                                    hintText: 'Middle Initial (Optional)',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.person_outline,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
-                                  ),
-                                ),
-
                                 // Last name field
                                 const SizedBox(height: 12),
                                 TextField(
@@ -332,6 +307,32 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     prefixIcon: GradientIcon(
                                       icon: Icons.badge,
+                                      size: AppDesign.sBtnIconSize,
+                                      gradient: LinearGradient(colors: [
+                                        AppDesign.primaryGradientStart,
+                                        AppDesign.primaryGradientEnd
+                                      ]),
+                                    ),
+                                  ),
+                                ),
+
+                                // Email field
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
+                                  decoration: InputDecoration(
+                                    hintText: 'Email',
+                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
+                                    filled: true,
+                                    fillColor: Colors.grey.withOpacity(0.1),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: GradientIcon(
+                                      icon: Icons.mail,
                                       size: AppDesign.sBtnIconSize,
                                       gradient: LinearGradient(colors: [
                                         AppDesign.primaryGradientStart,
@@ -416,32 +417,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                               ),
                                       ),
                                     ],
-                                  ),
-                                ),
-
-                                // Email field
-                                const SizedBox(height: 12),
-                                TextField(
-                                  controller: _emailController,
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  decoration: InputDecoration(
-                                    hintText: 'Email',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.mail,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
                                   ),
                                 ),
 
