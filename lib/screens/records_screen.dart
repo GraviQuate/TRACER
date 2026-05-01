@@ -534,7 +534,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   style: TextStyle(fontFamily: "AROneSans", fontSize: 13),
                 ),
                 style: TextButton.styleFrom(
-                  foregroundColor: AppDesign.primaryGradientStart,
+                  foregroundColor: const Color(0xFFF44336), 
                 ),
               ),
             ),
@@ -668,11 +668,19 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                         : null,
                                     borderRadius: BorderRadius.circular(23),
                                   ),
-                                  child: Icon(
-                                    Icons.tune,
-                                    size: AppDesign.sBtnIconSize,
-                                    color: _hasActiveFilters ? Colors.white : AppDesign.primaryGradientStart,
-                                  ),
+                                  child: _hasActiveFilters
+                                      ? Icon(
+                                          Icons.tune,
+                                          size: AppDesign.sBtnIconSize,
+                                          color: Colors.white,
+                                        )
+                                      : GradientIcon(
+                                          icon: Icons.tune,
+                                          size: AppDesign.sBtnIconSize,
+                                          gradient: const LinearGradient(
+                                            colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),

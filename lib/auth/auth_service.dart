@@ -18,10 +18,8 @@ class AuthService {
     required String email,
     required String password,
     required String firstName,
-    required String middleInitial,
     required String lastName,
     required String orgId,
-    required String studentId,
   }) async {
     final response = await _supabase.auth.signUp(
       email: email,
@@ -35,10 +33,8 @@ class AuthService {
         'user_id': userId,
         'email': email,
         'first_name': firstName,
-        'middle_initial': middleInitial.isNotEmpty ? middleInitial : null,
         'last_name': lastName,
         'organization_id': orgId,
-        'student_id': studentId,
       });
     }
 

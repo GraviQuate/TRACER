@@ -28,9 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _firstNameController = TextEditingController();
-  final _middleInitialController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _studentIdController = TextEditingController();
 
   @override
   void initState() {
@@ -57,19 +55,16 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void dispose() {
     _firstNameController.dispose();
-    _middleInitialController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _studentIdController.dispose();
     super.dispose();
   }
 
   // Sign up function
   Future<void> signup() async {
     final firstName = _firstNameController.text.trim();
-    final middleInitial = _middleInitialController.text.trim();
     final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -101,25 +96,14 @@ class _SignupScreenState extends State<SignupScreen> {
       }
       return;
     }
-    
-    if (_studentIdController.text.trim().isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          GradientBorderSnackbar(message: 'Please enter your student ID.')
-        );
-      }
-      return;
-    }
 
     try {
       await authService.signUp(
         email: email,
         password: password,
         firstName: firstName,
-        middleInitial: middleInitial,
         lastName: lastName,
         orgId: _selectedOrgId!,
-        studentId: _studentIdController.text.trim(),
       );
 
       if (mounted) {
@@ -281,32 +265,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     prefixIcon: GradientIcon(
                                       icon: Icons.person,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
-                                  ),
-                                ),
-
-                                // Student ID field
-                                const SizedBox(height: 12),
-                                TextField(
-                                  controller: _studentIdController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    hintText: 'Student ID',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.badge,
                                       size: AppDesign.sBtnIconSize,
                                       gradient: LinearGradient(colors: [
                                         AppDesign.primaryGradientStart,
