@@ -393,9 +393,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     borderRadius: AppDesign.sBtnBorderRadius,
                                     child: Text(
                                       'Sign Up',
-                                      style: AppDesign.buttonTextStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: AppDesign.buttonTextStyle,
                                     ),
                                   ),
                                 ),

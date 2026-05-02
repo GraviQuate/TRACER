@@ -224,9 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: AppDesign.sBtnBorderRadius,
                                     child: Text(
                                       'Log In',
-                                      style: AppDesign.buttonTextStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: AppDesign.buttonTextStyle,
                                     ),
                                   ),
                                 ),

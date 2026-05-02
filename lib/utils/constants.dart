@@ -55,7 +55,7 @@ abstract class AppDesign {
   /// Specific style for Button labels
   static const TextStyle buttonTextStyle = TextStyle(
     fontSize: 14.0,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
     color: appOffblack,
   );
 
