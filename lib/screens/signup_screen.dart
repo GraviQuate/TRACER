@@ -6,6 +6,8 @@ import '../widgets/gradient_icon.dart';
 import '../widgets/gradient_border_text.dart';
 import '../widgets/gradient_border_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../widgets/gradient_border_text_form_field.dart';
+import '../widgets/gradient_dropdown.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -226,236 +228,152 @@ class _SignupScreenState extends State<SignupScreen> {
 
                                 // First name field
                                 const SizedBox(height: 12),
-                                TextField(
+                                GradientTextFormField(
                                   controller: _firstNameController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  decoration: InputDecoration(
-                                    hintText: 'First Name',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.person,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
+                                  hintText: 'First Name',
+                                  fillColor: AppDesign.appLightGray,
+                                  borderRadius: BorderRadius.circular(10),
+                                  activeGradient: const LinearGradient(colors: [
+                                    AppDesign.primaryGradientStart,
+                                    AppDesign.primaryGradientEnd,
+                                  ]),
+                                  prefixIcon: GradientIcon(
+                                    icon: Icons.person,
+                                    size: AppDesign.sBtnIconSize,
+                                    gradient: const LinearGradient(colors: [
+                                      AppDesign.primaryGradientStart,
+                                      AppDesign.primaryGradientEnd,
+                                    ]),
                                   ),
                                 ),
 
                                 // Last name field
                                 const SizedBox(height: 12),
-                                TextField(
+                                GradientTextFormField(
                                   controller: _lastNameController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  decoration: InputDecoration(
-                                    hintText: 'Last Name',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.person,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
+                                  hintText: 'Last Name',
+                                  fillColor: AppDesign.appLightGray,
+                                  borderRadius: BorderRadius.circular(10),
+                                  activeGradient: const LinearGradient(colors: [
+                                    AppDesign.primaryGradientStart,
+                                    AppDesign.primaryGradientEnd,
+                                  ]),
+                                  prefixIcon: GradientIcon(
+                                    icon: Icons.person,
+                                    size: AppDesign.sBtnIconSize,
+                                    gradient: const LinearGradient(colors: [
+                                      AppDesign.primaryGradientStart,
+                                      AppDesign.primaryGradientEnd,
+                                    ]),
                                   ),
                                 ),
 
                                 // Email field
                                 const SizedBox(height: 12),
-                                TextField(
+                                GradientTextFormField(
                                   controller: _emailController,
+                                  hintText: 'Email',
                                   keyboardType: TextInputType.emailAddress,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
-                                  decoration: InputDecoration(
-                                    hintText: 'Email',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.mail,
-                                      size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
-                                        AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
-                                      ]),
-                                    ),
+                                  fillColor: AppDesign.appLightGray,
+                                  borderRadius: BorderRadius.circular(10),
+                                  activeGradient: const LinearGradient(colors: [
+                                    AppDesign.primaryGradientStart,
+                                    AppDesign.primaryGradientEnd,
+                                  ]),
+                                  prefixIcon: GradientIcon(
+                                    icon: Icons.mail,
+                                    size: AppDesign.sBtnIconSize,
+                                    gradient: const LinearGradient(colors: [
+                                      AppDesign.primaryGradientStart,
+                                      AppDesign.primaryGradientEnd,
+                                    ]),
                                   ),
                                 ),
 
                                 // Organization dropdown
                                 const SizedBox(height: 12),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Row(
-                                    children: [
-                                      GradientIcon(
-                                        icon: Icons.groups,
-                                        size: AppDesign.sBtnIconSize,
-                                        gradient: LinearGradient(colors: [
-                                          AppDesign.primaryGradientStart,
-                                          AppDesign.primaryGradientEnd,
-                                        ]),
+                                GradientDropdown<String>(
+                                  value: _selectedOrgId,
+                                  hintText: '   Select Organization',
+                                  prefixIcon: Icons.groups,
+                                  isLoading: _isLoadingOrgs,
+                                  loadingText: 'Loading organizations...',
+                                  items: _organizations.map((org) {
+                                    return DropdownMenuItem<String>(
+                                      value: org['id'] as String,
+                                      child: Text(
+                                        '${org['abbrv']} - ${org['name']}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppDesign.bodyStyle,
                                       ),
-                                      const SizedBox(width: 20),
-                                      Expanded(
-                                        child: _isLoadingOrgs
-                                            ? const Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 16),
-                                                child: Text(
-                                                  'Loading organizations...',
-                                                  style: TextStyle(
-                                                    color: Colors.black45,
-                                                    fontFamily: "AROneSans",
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              )
-                                            : DropdownButtonHideUnderline(
-                                                child: DropdownButton<String>(
-                                                  value: _selectedOrgId,
-                                                  isExpanded: true,
-                                                  borderRadius: BorderRadius.circular(16),
-                                                  icon: GradientIcon(
-                                                    icon: Icons.arrow_drop_down,
-                                                    size: AppDesign.sBtnIconSize,
-                                                    gradient: LinearGradient(colors: [
-                                                      AppDesign.primaryGradientStart,
-                                                      AppDesign.primaryGradientEnd,
-                                                    ]),
-                                                  ),
-                                                  hint: const Text(
-                                                    'Select Organization',
-                                                    style: TextStyle(
-                                                      color: Colors.black45,
-                                                      fontFamily: "AROneSans",
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: "AROneSans",
-                                                    fontSize: 16,
-                                                  ),
-                                                  items: _organizations.map((org) {
-                                                    return DropdownMenuItem<String>(
-                                                      value: org['id'] as String,
-                                                      child: Text(
-                                                        '${org['abbrv']} - ${org['name']}',
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (value) {
-                                                    setState(() => _selectedOrgId = value);
-                                                  },
-                                                ),
-                                              ),
-                                      ),
-                                    ],
-                                  ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => setState(() => _selectedOrgId = value),
                                 ),
 
                                 // Password field
                                 const SizedBox(height: 12),
-                                TextField(
+                                GradientTextFormField(
                                   controller: _passwordController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
+                                  hintText: 'Password',
                                   obscureText: !_passwordVisible,
-                                  decoration: InputDecoration(
-                                    hintText: 'Password',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.lock,
+                                  fillColor: AppDesign.appLightGray,
+                                  borderRadius: BorderRadius.circular(10),
+                                  activeGradient: const LinearGradient(colors: [
+                                    AppDesign.primaryGradientStart,
+                                    AppDesign.primaryGradientEnd,
+                                  ]),
+                                  prefixIcon: GradientIcon(
+                                    icon: Icons.lock,
+                                    size: AppDesign.sBtnIconSize,
+                                    gradient: const LinearGradient(colors: [
+                                      AppDesign.primaryGradientStart,
+                                      AppDesign.primaryGradientEnd,
+                                    ]),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: GradientIcon(
+                                      icon: _passwordVisible ? Icons.visibility : Icons.visibility_off,
                                       size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
+                                      gradient: const LinearGradient(colors: [
                                         AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
+                                        AppDesign.primaryGradientEnd,
                                       ]),
                                     ),
-                                    suffixIcon: IconButton(
-                                      icon: GradientIcon(
-                                        icon: _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                        size: AppDesign.sBtnIconSize,
-                                        gradient: LinearGradient(colors: [
-                                          AppDesign.primaryGradientStart,
-                                          AppDesign.primaryGradientEnd
-                                        ]),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _passwordVisible = !_passwordVisible;
-                                        });
-                                      },
-                                    ),
+                                    onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
                                   ),
                                 ),
 
                                 // Confirm Password field
                                 const SizedBox(height: 12),
-                                TextField(
+                                GradientTextFormField(
                                   controller: _confirmPasswordController,
-                                  style: const TextStyle(color: Colors.black, fontFamily: "AROneSans"),
+                                  hintText: 'Confirm Password',
                                   obscureText: !_confirmPasswordVisible,
-                                  decoration: InputDecoration(
-                                    hintText: 'Confirm Password',
-                                    hintStyle: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.1),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    prefixIcon: GradientIcon(
-                                      icon: Icons.lock,
+                                  fillColor: AppDesign.appLightGray,
+                                  borderRadius: BorderRadius.circular(10),
+                                  activeGradient: const LinearGradient(colors: [
+                                    AppDesign.primaryGradientStart,
+                                    AppDesign.primaryGradientEnd,
+                                  ]),
+                                  prefixIcon: GradientIcon(
+                                    icon: Icons.lock,
+                                    size: AppDesign.sBtnIconSize,
+                                    gradient: const LinearGradient(colors: [
+                                      AppDesign.primaryGradientStart,
+                                      AppDesign.primaryGradientEnd,
+                                    ]),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: GradientIcon(
+                                      icon: _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
                                       size: AppDesign.sBtnIconSize,
-                                      gradient: LinearGradient(colors: [
+                                      gradient: const LinearGradient(colors: [
                                         AppDesign.primaryGradientStart,
-                                        AppDesign.primaryGradientEnd
+                                        AppDesign.primaryGradientEnd,
                                       ]),
                                     ),
-                                    suffixIcon: IconButton(
-                                      icon: GradientIcon(
-                                        icon: _confirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                                        size: AppDesign.sBtnIconSize,
-                                        gradient: LinearGradient(colors: [
-                                          AppDesign.primaryGradientStart,
-                                          AppDesign.primaryGradientEnd
-                                        ]),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _confirmPasswordVisible = !_confirmPasswordVisible;
-                                        });
-                                      },
-                                    ),
+                                    onPressed: () => setState(() => _confirmPasswordVisible = !_confirmPasswordVisible),
                                   ),
                                 ),
 
@@ -473,13 +391,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                         AppDesign.primaryGradientEnd
                                       ]),
                                     borderRadius: AppDesign.sBtnBorderRadius,
-                                    child: const Text(
+                                    child: Text(
                                       'Sign Up',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
+                                      style: AppDesign.buttonTextStyle.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        fontFamily: "AROneSans"
                                       ),
                                     ),
                                   ),
@@ -490,9 +405,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Already have an account? ",
-                                      style: TextStyle(color: Colors.black45, fontFamily: "AROneSans"),
+                                      style: AppDesign.bodyStyle
                                     ),
                                     TextButton(
                                       onPressed: () {
@@ -505,10 +420,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                       ),
                                       child: Text(
                                         'Log In now',
-                                        style: TextStyle(
+                                        style: AppDesign.bodyStyle.copyWith(
                                           color: AppDesign.primaryGradientEnd,
                                           fontWeight: FontWeight.bold,
-                                          fontFamily: "AROneSans"
                                         ),
                                       )
                                     )
