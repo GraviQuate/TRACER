@@ -17,7 +17,7 @@ class GradientBorderButton extends StatefulWidget {
     super.key,
     required this.onPressed,
     required this.child,
-    this.borderWidth = 3.0,
+    this.borderWidth = 2.0,
     required this.gradient,
     this.borderRadius,
     this.innerColor = Colors.white,
