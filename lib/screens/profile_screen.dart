@@ -152,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               GradientBorderButton(
                                 onPressed: () async {
-
+                                  logout();
                                 },
                                 borderRadius: BorderRadius.circular(30.0),
                                 gradient: LinearGradient(

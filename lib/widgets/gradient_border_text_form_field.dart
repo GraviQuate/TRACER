@@ -11,12 +11,14 @@ class GradientTextFormField extends StatefulWidget {
   final BorderRadius? borderRadius;
   final String? prefixText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final VoidCallback? onTap;
   final Function(String)? onChanged;
   final bool readOnly;
+  final bool obscureText;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final TextCapitalization textCapitalization;
@@ -31,11 +33,13 @@ class GradientTextFormField extends StatefulWidget {
     this.borderRadius,
     this.prefixText,
     this.suffixIcon,
+    this.prefixIcon,
     this.validator,
     this.onSaved,
     this.onTap,
     this.onChanged,
     this.readOnly = false,
+    this.obscureText = false,
     this.keyboardType,
     this.inputFormatters,
     this.textCapitalization = TextCapitalization.none,
@@ -98,7 +102,7 @@ class _GradientTextFormFieldState extends State<GradientTextFormField> {
         child: TextFormField(
           controller: widget.controller,
           focusNode: _focusNode,
-
+          obscureText: widget.obscureText,
           validator: widget.validator,
           onSaved: widget.onSaved,
           onTap: widget.onTap,
@@ -120,6 +124,7 @@ class _GradientTextFormFieldState extends State<GradientTextFormField> {
             prefixText: widget.prefixText,
             prefixStyle: AppDesign.bodyStyle,
             suffixIcon: widget.suffixIcon,
+            prefixIcon: widget.prefixIcon,
           ),
         ),
       ),
