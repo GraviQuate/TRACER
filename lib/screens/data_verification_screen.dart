@@ -253,7 +253,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           ])
                                         ),
                                         children: [
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "First Name",
                                             controller: _stuFirstNameController,
                                             formatters: [NameFormatter()],
@@ -270,7 +270,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "M.I.",
                                                       controller: _stuMiddleInitialController,
                                                       formatters: [
@@ -294,7 +294,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Last Name",
                                                       controller: _stuLastNameController,
                                                       formatters: [
@@ -309,7 +309,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             ],
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Student Number",
                                             controller: _stuNumController,
                                             formatters: [
@@ -340,7 +340,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Month",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactMonthController,
@@ -364,7 +364,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Day",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactDayController,
@@ -388,7 +388,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Year",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactYearController,
@@ -408,7 +408,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             ],
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Amount",
                                             controller: _transactAmountController,
                                             onChanged: (_) {
@@ -420,7 +420,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             prefixText: "PHP ",
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Amount in words",
                                             suffixIcon: Icons.edit_off_outlined,
                                             iconGradient: const LinearGradient(colors: [AppDesign.disabledGray, AppDesign.disabledGray]),
@@ -429,7 +429,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             readOnly: true,
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Description",
                                             controller: _transactDescriptionController,
                                             formatters: [
@@ -438,7 +438,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             textCapitalization: TextCapitalization.words,
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Receipt Number",
                                             controller: _transactRecordNumController,
                                             formatters: [
@@ -460,7 +460,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                           ])
                                         ),
                                         children: [
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "First Name",
                                             controller: _foFirstNameController,
                                             formatters: [
@@ -479,7 +479,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "M.I.",
                                                       controller: _foMiddleInitialController,
                                                       formatters: [
@@ -501,7 +501,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Last Name",
                                                       controller: _foLastNameController,
                                                       formatters: [
@@ -641,7 +641,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
           Icon(
             Icons.error_outline_rounded,
             size: 48.0,
-            color: AppDesign.errorRed,
+            color: AppDesign.dangerRed,
           ),
           message,
           GradientBorderButton(
@@ -668,7 +668,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
               }
               Navigator.of(context).popUntil(ModalRoute.withName('/scan'));
             },
-            gradient: LinearGradient(colors: [AppDesign.errorRed, AppDesign.errorRed]),
+            gradient: LinearGradient(colors: [AppDesign.dangerRed, AppDesign.dangerRed]),
             borderRadius: BorderRadius.circular(30.0),
             child: Text(
               "Discard",

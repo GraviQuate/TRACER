@@ -4,7 +4,7 @@ import 'package:tracer/utils/constants.dart';
 import 'package:tracer/widgets/gradient_border_text_form_field.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
 
-class LabeledField extends StatelessWidget {
+class LabeledFormField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final List<TextInputFormatter>? formatters;
@@ -19,7 +19,7 @@ class LabeledField extends StatelessWidget {
   final Color? textColor;
   final Color? fillColor;
 
-  const LabeledField({
+  const LabeledFormField({
     super.key,
     required this.label,
     required this.controller,

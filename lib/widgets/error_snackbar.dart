@@ -32,7 +32,7 @@ class ErrorSnackbar extends SnackBar {
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: BoxBorder.all(
-                  color: AppDesign.errorRed,
+                  color: AppDesign.dangerRed,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(50.0),
@@ -45,7 +45,7 @@ class ErrorSnackbar extends SnackBar {
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.error_outline_rounded,
-                      color: AppDesign.errorRed,
+                      color: AppDesign.dangerRed,
                       size: 36.0,
                     ),
                   ),

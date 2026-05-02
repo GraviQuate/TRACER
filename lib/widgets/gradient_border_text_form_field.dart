@@ -91,7 +91,7 @@ class _GradientTextFormFieldState extends State<GradientTextFormField> {
 
       child: Container(
         decoration: BoxDecoration(
-          color: widget.fillColor ?? Colors.grey.shade100,
+          color: widget.fillColor ?? AppDesign.appLightGray,
           borderRadius: widget.borderRadius
         ),
 
