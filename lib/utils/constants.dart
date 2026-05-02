@@ -19,6 +19,47 @@ abstract class AppDesign {
 
   // --- General Design Constants ---
 
+  // Text Styles
+
+  // Use for Screen Titles
+  static const TextStyle headingStyle = TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w600,
+    color: appOffblack,
+    letterSpacing: -0.5,
+  );
+
+  // Use for Section Headers or Card Titles, normal weight
+  static const TextStyle subHeading1Style = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+  );
+
+  // Slightly larger than body text, in normal weight
+  static const TextStyle subHeading2Style = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+  );
+
+  // Standard body text for descriptions and messages
+  static const TextStyle bodyStyle = TextStyle(
+    fontFamily: 'IBMPlexSans', // Needed for _Popup
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+    height: 1.4,
+  );
+
+  /// Specific style for Button labels
+  static const TextStyle buttonTextStyle = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    color: appOffblack,
+  );
+
+  // Box Shadows
   static final defaultBoxShadows = [
     BoxShadow(
       color: Colors.black.withValues(alpha: 0.14),
@@ -40,6 +81,8 @@ abstract class AppDesign {
   static const Color appPaleCyan = Color(0xffe2fff8);
   static const Color appOffblack = Color(0xff302e34);
   static const Color appLightGray = Color(0xfff1f1f1);
+  static const Color disabledGray = Color(0xffc4c4c4);
+  static const Color dangerRed = Color(0xfff44336);
   // static const Color white = Color(0xffffffff); just use Colors.white
 
   // Gradient Colors

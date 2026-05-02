@@ -31,7 +31,6 @@ class Transaction {
     this.foLastName,
   });
 
-  // Convert json to Transaction object
   factory Transaction.fromJson(Map<String, dynamic> json) {
     String month = '', day = '', year = '';
     if (json['receiptdate'] != null) {
@@ -63,4 +62,33 @@ class Transaction {
       transactDay: day,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "receiptno": receiptNum,
+      "studentid": stuNum,
+      "amount": transactAmount,
+      "amountwords": transactAmountWords,
+      "purpose": transactPurpose,
+      "finance_fn": foFirstName,
+      "finance_mi": foMiddleInitial,
+      "finance_ln": foLastName,
+      "receiptdate": "$transactYear-$transactMonth-$transactDay",
+    };
+  }
+
+  bool isEmpty() {
+    return [
+      stuFirstName, stuMiddleInitial, stuLastName, stuNum, receiptNum, transactDay, transactMonth, transactPurpose,
+      transactYear, transactAmount, transactAmountWords, foFirstName, foMiddleInitial, foLastName
+    ].every((field) => field == null || field.isEmpty);
+  }
+
+  bool isMissingRequiredValue() {
+    return [
+      stuFirstName, stuLastName, stuNum, receiptNum, transactDay, transactMonth, transactPurpose,
+      transactYear, transactAmount, transactAmountWords, foFirstName, foLastName
+    ].any((field) => field == null || field.isEmpty);
+  }
+
 }

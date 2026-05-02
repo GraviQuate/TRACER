@@ -11,7 +11,7 @@ import 'package:tracer/screens/scan_screen.dart';
 import 'package:tracer/screens/scan_confirmation_screen.dart';
 import 'package:tracer/screens/data_verification_screen.dart';
 import 'package:tracer/screens/records_screen.dart';
-import 'package:tracer/screens/settings_screen.dart';
+import 'package:tracer/screens/profile_screen.dart';
 import 'package:tracer/screens/signup_screen.dart';
 
 Future<void> main() async {
@@ -25,6 +25,7 @@ Future<void> main() async {
 
       child: MaterialApp(
         theme: ThemeData(
+          fontFamily: 'IBMPlexSans',
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -64,7 +65,7 @@ Future<void> main() async {
           '/login': (context) => const LoginScreen(),
           '/records': (context) => const RecordsScreen(),
           '/scan': (context) => const ScanScreen(),
-          '/settings': (context) => const SettingsScreen(),
+          '/profile': (context) => const ProfileScreen(),
           '/signup': (context) => const SignupScreen(),
         },
       ),

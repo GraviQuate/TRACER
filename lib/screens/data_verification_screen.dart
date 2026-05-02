@@ -5,12 +5,15 @@ import 'package:provider/provider.dart';
 import 'package:number_to_words_english/number_to_words_english.dart';
 import 'package:tracer/services/db_service.dart';
 import 'package:tracer/utils/formatters.dart';
+import 'package:tracer/widgets/error_snackbar.dart';
 import 'package:tracer/widgets/gradient_border_button.dart';
 import 'package:tracer/widgets/gradient_border_text_form_field.dart';
 import 'package:tracer/widgets/gradient_icon.dart';
 
 import 'package:tracer/utils/constants.dart';
 import 'package:tracer/models/transaction.dart';
+import 'package:tracer/widgets/labeled_field.dart';
+import 'package:tracer/widgets/titled_card.dart';
 
 class DataVerificationScreen extends StatefulWidget {
   Transaction transaction;
@@ -235,19 +238,22 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        "Please confirm the details are correct",
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: AppDesign.appOffblack,
-                                          fontFamily: "AROneSans",
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        'Please confirm the details are correct',
+                                        style: AppDesign.subHeading2Style,
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Student Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.account_circle_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "First Name",
                                             controller: _stuFirstNameController,
                                             formatters: [NameFormatter()],
@@ -264,8 +270,8 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
-                                                      label: "Middle Initial",
+                                                    LabeledFormField(
+                                                      label: "M.I.",
                                                       controller: _stuMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
@@ -288,7 +294,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Last Name",
                                                       controller: _stuLastNameController,
                                                       formatters: [
@@ -303,7 +309,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             ],
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Student Number",
                                             controller: _stuNumController,
                                             formatters: [
@@ -314,8 +320,16 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ],
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Transaction Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.credit_card_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
@@ -326,7 +340,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Month",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactMonthController,
@@ -350,7 +364,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Day",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactDayController,
@@ -374,7 +388,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Year",
                                                       suffixIcon: Icons.arrow_drop_down,
                                                       controller: _transactYearController,
@@ -394,24 +408,28 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             ],
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Amount",
                                             controller: _transactAmountController,
+                                            onChanged: (_) {
+                                              _transactAmountWordsController.text = _getAmtWords(_transactAmountController.text);
+                                            },
                                             formatters: [
                                               FilteringTextInputFormatter.digitsOnly,
                                             ],
                                             prefixText: "PHP ",
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Amount in words",
                                             suffixIcon: Icons.edit_off_outlined,
+                                            iconGradient: const LinearGradient(colors: [AppDesign.disabledGray, AppDesign.disabledGray]),
                                             textColor: Colors.grey.shade500,
                                             controller: _transactAmountWordsController,
                                             readOnly: true,
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Description",
                                             controller: _transactDescriptionController,
                                             formatters: [
@@ -420,7 +438,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                             textCapitalization: TextCapitalization.words,
                                           ),
 
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "Receipt Number",
                                             controller: _transactRecordNumController,
                                             formatters: [
@@ -431,10 +449,18 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ],
                                       ),
 
-                                      VerificationSection(
+                                      TitledCard(
                                         title: "Finance Officer Details",
+                                        icon: GradientIcon(
+                                          icon: Icons.stars_rounded,
+                                          size: 28.0,
+                                          gradient: LinearGradient(colors: [
+                                            AppDesign.primaryGradientStart,
+                                            AppDesign.primaryGradientEnd
+                                          ])
+                                        ),
                                         children: [
-                                          LabeledField(
+                                          LabeledFormField(
                                             label: "First Name",
                                             controller: _foFirstNameController,
                                             formatters: [
@@ -453,8 +479,8 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
-                                                      label: "Middle Initial",
+                                                    LabeledFormField(
+                                                      label: "M.I.",
                                                       controller: _foMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
@@ -475,7 +501,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   spacing: 5.0,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    LabeledField(
+                                                    LabeledFormField(
                                                       label: "Last Name",
                                                       controller: _foLastNameController,
                                                       formatters: [
@@ -495,96 +521,29 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
 
                                       GradientBorderButton(
                                         onPressed: () async {
+                                          _setTransactionFromFields();
+
+                                          if (widget.transaction.isMissingRequiredValue()) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Please fill in all required fields!",)
+                                            );
+                                            return;
+                                          }
+
                                           try {
-                                            _setTransactionFromFields();
-
-                                            final List<Map<String, dynamic>> response =
-                                              await context.read<DbService>().insertTransaction(widget.transaction);
-
-                                            if (response.isNotEmpty) {
-                                              debugPrint('Transaction saved successfully! ID: ${response.first['id']}');
-
-                                              if (!context.mounted) return;
-
-                                              showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (context) {
-                                                  return _Popup(
-                                                    GradientIcon(
-                                                      icon: Icons.check_circle_outline,
-                                                      size: 48.0,
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          AppDesign.primaryGradientStart,
-                                                          AppDesign.primaryGradientEnd,
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    "Data saved successfully!\nReceipt was also sent to student's email.",
-                                                    GradientBorderButton(
-                                                      onPressed: () async {
-                                                        Navigator.of(context).popUntil(ModalRoute.withName('/'));
-                                                      },
-                                                      borderRadius: BorderRadius.circular(30.0),
-                                                      gradient: LinearGradient(
-                                                        colors: [
-                                                          AppDesign.primaryGradientStart,
-                                                          AppDesign.primaryGradientEnd,
-                                                        ],
-                                                      ),
-                                                      child: Text(
-                                                        "Confirm",
-                                                        style: TextStyle(
-                                                          color: AppDesign.appOffblack,
-                                                          fontSize: 12.0,
-                                                          fontFamily: "AROneSans",
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              );
-                                            }
-                                          } catch (e) {
-                                            debugPrint('Upload Failed $e');
+                                            await context.read<DbService>().insertTransaction(widget.transaction);
 
                                             if (!context.mounted) return;
 
-                                            showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (context) {
-                                                return _Popup(
-                                                  Icon(
-                                                    Icons.error,
-                                                    size: 48.0,
-                                                    color: Colors.red,
-                                                  ),
-                                                  "Failed to upload the data!\nFailed to generate receipt! :(",
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context, rootNavigator: true).pop();
-                                                    },
-                                                    child: Row(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        Text(
-                                                          "Ok",
-                                                          style: TextStyle(
-                                                            color: AppDesign.appOffblack,
-                                                            fontSize: 14.0,
-                                                            fontFamily: "AROneSans",
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              }
+                                            showSuccessDialog(context);
+                                          } on DuplicateReceiptException {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Receipt number already exists.\nAre you sure it is correct?",)
+                                            );
+                                          }
+                                          catch (e) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              ErrorSnackbar(errorMsg: "Unknown error,\nPlease try again later.",)
                                             );
                                           }
                                         },
@@ -594,14 +553,9 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                         ),
                                         child: const Text(
                                           "Upload to Database",
-                                          style: TextStyle(
-                                            color: AppDesign.appOffblack,
-                                            fontSize: 14.0,
-                                            fontFamily: "AROneSans",
-                                          ),
+                                          style: AppDesign.buttonTextStyle,
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -620,6 +574,16 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                     iconData: widget.isFromHomeScreen ?
                     Icons.arrow_back_rounded :
                     Icons.replay,
+                    onPressed: () async {
+                      _setTransactionFromFields();
+
+                      if (!widget.transaction.isEmpty()) {
+                        showUnsavedDialog(context, "Wait! You have unsaved changes!");
+                        return;
+                      }
+
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),
@@ -629,16 +593,104 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
       ),
     );
   }
+
+  Future<dynamic> showSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _Popup(
+          GradientIcon(
+            icon: Icons.check_circle_outline,
+            size: 48.0,
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+          ),
+          "Data saved successfully!\nReceipt was also sent to student's email.",
+          GradientBorderButton(
+            onPressed: () async {
+              Navigator.of(context).popUntil(ModalRoute.withName('/'));
+            },
+            borderRadius: BorderRadius.circular(30.0),
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+            child: Text(
+              "Confirm",
+              style: AppDesign.buttonTextStyle,
+            ),
+          ),
+        );
+      }
+    );
+  }
+
+  Future<dynamic> showUnsavedDialog(BuildContext context, String message) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return _Popup(
+          Icon(
+            Icons.error_outline_rounded,
+            size: 48.0,
+            color: AppDesign.dangerRed,
+          ),
+          message,
+          GradientBorderButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+            borderRadius: BorderRadius.circular(30.0),
+            gradient: LinearGradient(
+              colors: [
+                AppDesign.primaryGradientStart,
+                AppDesign.primaryGradientEnd,
+              ],
+            ),
+            child: Text(
+              "Go back",
+              style: AppDesign.buttonTextStyle,
+            ),
+          ),
+          btn2: GradientBorderButton(
+            onPressed: () async {
+              if (widget.isFromHomeScreen) {
+                Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                return;
+              }
+              Navigator.of(context).popUntil(ModalRoute.withName('/scan'));
+            },
+            gradient: LinearGradient(colors: [AppDesign.dangerRed, AppDesign.dangerRed]),
+            borderRadius: BorderRadius.circular(30.0),
+            child: Text(
+              "Discard",
+              style: AppDesign.buttonTextStyle,
+            ),
+          ),
+        );
+      }
+    );
+  }
 }
 
 class _TopStickyButton extends StatelessWidget {
   final String text;
   final IconData iconData;
+  final VoidCallback onPressed;
 
   const _TopStickyButton({
     super.key,
     required this.text,
     required this.iconData,
+    required this.onPressed,
   });
 
   @override
@@ -646,9 +698,7 @@ class _TopStickyButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ElevatedButton(
-        onPressed: () async {
-          Navigator.of(context).pop();
-        },
+        onPressed: onPressed,
         child: Padding(
           padding: EdgeInsets.only(left: 5.0, right: 15.0),
           child: Row(
@@ -664,11 +714,7 @@ class _TopStickyButton extends StatelessWidget {
 
               Text(
                 text,
-                style: TextStyle(
-                  color: AppDesign.appOffblack,
-                  fontFamily: "AROneSans",
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppDesign.buttonTextStyle,
               )
             ]
           ),
@@ -682,12 +728,14 @@ class _Popup extends StatelessWidget {
   const _Popup(
     this.icon,
     this.dialog,
-    this.btn,
-  );
+    this.btn1, {
+    this.btn2,
+  });
 
   final Widget icon;
   final String dialog;
-  final Widget btn;
+  final Widget btn1;
+  final Widget? btn2;
 
   @override
   Widget build(BuildContext context) {
@@ -714,129 +762,30 @@ class _Popup extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: 20.0,
             children: [
-              icon,
+              Column(
+                spacing: 8.0,
+                children: [
+                  icon,
 
-              Text(
-                dialog,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppDesign.appOffblack,
-                  fontSize: 14.0,
-                  fontFamily: "AROneSans",
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none
-                ),
+                  Text(
+                    dialog,
+                    textAlign: TextAlign.center,
+                    style: AppDesign.bodyStyle.copyWith(decoration: TextDecoration.none),
+                  ),
+                ],
               ),
 
-              btn,
+              Column(
+                spacing: 12.0,
+                children: [
+                  btn1,
+                  ?btn2,
+                ],
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class VerificationSection extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const VerificationSection({
-    super.key,
-    required this.title,
-    required this.children,
-    });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: AppDesign.defaultBoxShadows,
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: Column(
-        spacing: 5.0,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyle(
-            color: AppDesign.appOffblack,
-            fontSize: 18.0,
-            fontFamily: "AROneSans",
-            fontWeight: FontWeight.bold,
-          )), // Use a constant style
-          const Divider(color: Colors.grey),
-          ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class LabeledField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final List<TextInputFormatter>? formatters;
-  final TextInputType? keyboardType;
-  final TextCapitalization? textCapitalization;
-  final VoidCallback? onTap;
-  final bool readOnly;
-  final String? prefixText;
-  final IconData suffixIcon;
-  final Color? textColor;
-  final Color? fillColor;
-
-  const LabeledField({
-    super.key,
-    required this.label,
-    required this.controller,
-    this.formatters,
-    this.keyboardType,
-    this.textCapitalization,
-    this.onTap,
-    this.readOnly = false,
-    this.prefixText,
-    this.suffixIcon = Icons.edit_outlined,
-    this.textColor,
-    this.fillColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 12.0, fontFamily: "AROneSans", fontWeight: FontWeight.bold)),
-        const SizedBox(height: 5),
-        GradientTextFormField(
-          controller: controller,
-          inputFormatters: formatters,
-          keyboardType: keyboardType,
-          textCapitalization: textCapitalization ?? TextCapitalization.none,
-          readOnly: readOnly,
-          onTap: onTap,
-          prefixText: prefixText,
-
-          // Shared design properties
-          textColor: textColor,
-          fillColor: fillColor,
-          activeGradient: const LinearGradient(
-            colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd]
-          ),
-          borderRadius: BorderRadius.circular(30.0),
-          suffixIcon: GradientIcon(
-            icon: suffixIcon,
-            size: 24.0,
-            gradient: const LinearGradient(
-              colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-            )
-          ),
-        ),
-      ],
     );
   }
 }

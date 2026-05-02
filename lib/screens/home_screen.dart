@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   flex: 5,
                                   child: _HomeRoundedButton(
                                     gradientIcon: GradientIcon(
-                                      icon: Icons.settings,
+                                      icon: Icons.account_circle_rounded,
                                       size: 24.0,
                                       gradient: LinearGradient(
                                         colors: [
@@ -156,16 +156,16 @@ class _HomeScreenState extends State<HomeScreen>
                                         ]
                                       )
                                     ),
-                                    title: "Settings",
+                                    title: "Profile",
                                     onTap: () async {
-                                      await Navigator.of(context).pushNamed('/settings');
+                                      await Navigator.of(context).pushNamed('/profile');
                                     },
                                   ),
                                 ),
                               ],
                             ),
 
-                            _HomeMainBigRoundedButton(text: "Scanner"),
+                            _HomeMainBigRoundedButton(title: "Scanner"),
                             _HomeBigRoundedButton(text: "Manual Input"),
 
                             const SizedBox(height: 25),
@@ -192,11 +192,11 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 class _HomeMainBigRoundedButton extends StatelessWidget {
-  final String text;
+  final String title;
 
   const _HomeMainBigRoundedButton({
     super.key,
-    this.text = "",
+    this.title = "",
   });
 
   @override
@@ -214,7 +214,7 @@ class _HomeMainBigRoundedButton extends StatelessWidget {
       ),
       child: Column(
         children: [
-          GradientIcon(
+          const GradientIcon(
             icon: Icons.camera_alt_outlined,
             size: 48.0,
             gradient: LinearGradient(
@@ -224,15 +224,7 @@ class _HomeMainBigRoundedButton extends StatelessWidget {
               ]
             ),
           ),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 14.0,
-              color: AppDesign.appOffblack,
-              fontFamily: "AROneSans",
-              fontWeight: FontWeight.bold,
-            ),
-          )
+          Text(title, style: AppDesign.buttonTextStyle),
         ]
       ),
     );
@@ -310,15 +302,7 @@ class _HomeRoundedButton extends StatelessWidget{
             children: [
               gradientIcon,
               const SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: AppDesign.appOffblack,
-                  fontFamily: "AROneSans",
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text(title, style: AppDesign.buttonTextStyle),
             ],
           ),
         ),
@@ -353,15 +337,7 @@ class _LinkTile extends StatelessWidget{
           child: Row(
               children:[
                 Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: AppDesign.appOffblack,
-                      fontFamily: "AROneSans",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
+                  child: Text(title, style: AppDesign.buttonTextStyle),
                 ),
                 const Icon(Icons.open_in_new, size: 18),
               ]
