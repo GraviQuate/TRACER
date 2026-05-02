@@ -47,7 +47,7 @@ class GradientDropdown<T> extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
                       loadingText,
-                      style: AppDesign.bodyStyle.copyWith(color: Colors.black45),
+                      style: AppDesign.bodyStyle.copyWith(color: Colors.black38),
                     ),
                   )
                 : DropdownButtonHideUnderline(
@@ -66,7 +66,7 @@ class GradientDropdown<T> extends StatelessWidget {
                       ),
                       hint: Text(
                         hintText,
-                        style: AppDesign.bodyStyle.copyWith(color: Colors.black45),
+                        style: AppDesign.bodyStyle.copyWith(color: Colors.black38),
                       ),
                       style: AppDesign.bodyStyle,
                       items: items,
