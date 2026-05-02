@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
-import '../widgets/gradient_icon.dart';
+import 'gradient_icon.dart';
 
 class GradientDropdown<T> extends StatelessWidget {
   final T? value;
