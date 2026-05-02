@@ -116,6 +116,7 @@ class _GradientTextFormFieldState extends State<GradientTextFormField> {
 
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: AppDesign.bodyStyle.copyWith(color: Colors.black38),
             border: InputBorder.none,
             errorStyle: const TextStyle(height: 0),
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
