@@ -96,8 +96,15 @@ class AppBottomSheet extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Divider
-              const Divider(color: Colors.black12),
+              // Gradient divider
+              Container(
+                height: 2,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppDesign.primaryGradientStart, AppDesign.primaryGradientEnd],
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 16),
 
