@@ -32,14 +32,14 @@ abstract class AppDesign {
   // Use for Section Headers or Card Titles, normal weight
   static const TextStyle subHeading1Style = TextStyle(
     fontSize: 18.0,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w600,
     color: appOffblack,
   );
 
   // Slightly larger than body text, in normal weight
   static const TextStyle subHeading2Style = TextStyle(
     fontSize: 16.0,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w600,
     color: appOffblack,
   );
 
@@ -47,7 +47,7 @@ abstract class AppDesign {
   static const TextStyle bodyStyle = TextStyle(
     fontFamily: 'IBMPlexSans', // Needed for _Popup
     fontSize: 14.0,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w600,
     color: appOffblack,
     height: 1.4,
   );

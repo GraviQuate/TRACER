@@ -336,7 +336,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text('Current password',
-            style: AppDesign.bodyStyle.copyWith(fontWeight: FontWeight.bold)),
+            style: AppDesign.bodyStyle),
         const SizedBox(height: 5),
         GradientTextFormField(
           controller: _currentPasswordController,
@@ -368,7 +368,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
         ),
         const SizedBox(height: 12),
         Text('New password',
-            style: AppDesign.bodyStyle.copyWith(fontWeight: FontWeight.bold)),
+            style: AppDesign.bodyStyle),
         const SizedBox(height: 5),
         GradientTextFormField(
           controller: _newPasswordController,
@@ -400,7 +400,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
         ),
         const SizedBox(height: 12),
         Text('Confirm new password',
-            style: AppDesign.bodyStyle.copyWith(fontWeight: FontWeight.bold)),
+            style: AppDesign.bodyStyle),
         const SizedBox(height: 5),
         GradientTextFormField(
           controller: _confirmPasswordController,
