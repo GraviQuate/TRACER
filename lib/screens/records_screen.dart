@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../utils/constants.dart';
 import '../models/transaction.dart';
 import '../widgets/gradient_icon.dart';
+import '../widgets/gradient_dropdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RecordsScreen extends StatefulWidget {
@@ -262,7 +263,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Record no.',
+                      'Receipt no.',
                       style: TextStyle(
                         fontFamily: "AROneSans",
                         fontSize: 13,
@@ -383,7 +384,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
   Widget _buildFilterPanel() {
     return Container(
       margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: const LinearGradient(
@@ -416,7 +417,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   child: GestureDetector(
                     onTap: () => _pickDate(true),
                     child: Container(
-                      padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         gradient: const LinearGradient(
@@ -459,7 +460,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   child: GestureDetector(
                     onTap: () => _pickDate(false),
                     child: Container(
-                      padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         gradient: const LinearGradient(
@@ -514,7 +515,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
             ),
             const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(3),
+              padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 gradient: const LinearGradient(
@@ -637,12 +638,10 @@ class _RecordsScreenState extends State<RecordsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Title
-                        const Text(
+                        Text(
                           'Records',
-                          style: TextStyle(
-                            fontFamily: "AROneSans",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30.0,
+                          style: AppDesign.headingStyle.copyWith(
+                              fontSize: 30.0,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -656,7 +655,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                             Expanded(
                               child: Container(
                                 height: 50,
-                                padding: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
                                   gradient: const LinearGradient(
@@ -709,7 +708,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                               child: Container(
                                 height: 50,
                                 width: 50,
-                                padding: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
                                   gradient: const LinearGradient(
@@ -763,10 +762,8 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                 width: 80,
                                 child: Text(
                                   "Receipt No.",
-                                  style: TextStyle(
-                                    fontFamily: "AROneSans",
+                                  style: AppDesign.bodyStyle.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14,
                                     color: Colors.black54,
                                   ),
                                 ),
@@ -777,10 +774,8 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 9.0),
                                   child: Text(
                                     "Details",
-                                    style: TextStyle(
-                                      fontFamily: "AROneSans",
+                                    style: AppDesign.bodyStyle.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
                                       color: Colors.black54,
                                     ),
                                   ),
@@ -792,10 +787,8 @@ class _RecordsScreenState extends State<RecordsScreen> {
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     "Amount",
-                                    style: TextStyle(
-                                      fontFamily: "AROneSans",
+                                    style: AppDesign.bodyStyle.copyWith(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
                                       color: Colors.black54,
                                     ),
                                   ),
@@ -853,7 +846,13 @@ class _RecordsScreenState extends State<RecordsScreen> {
   // Widget for each record row
   Widget _buildRecordRow(Transaction record) {
     // Format date 
-    final dateString = "${record.transactMonth}-${record.transactDay}-${record.transactYear}";
+    final months = ['Jan','Feb','Mar','Apr','May','Jun',
+                    'Jul','Aug','Sep','Oct','Nov','Dec'];
+    final monthNum = int.tryParse(record.transactMonth ?? '');
+    final monthName = (monthNum != null && monthNum >= 1 && monthNum <= 12)
+        ? months[monthNum - 1]
+        : record.transactMonth ?? '';
+    final dateString = "$monthName ${record.transactDay}, ${record.transactYear}";
 
     // Format finance officer's name
     final fName = record.foFirstName ?? '';
@@ -879,11 +878,10 @@ class _RecordsScreenState extends State<RecordsScreen> {
                 width: 90,
                 child: Text(
                   record.receiptNum ?? '---',
-                  style: const TextStyle(
-                    fontFamily: "AROneSans",
-                    fontWeight: FontWeight.bold, 
+                  style: AppDesign.bodyStyle.copyWith(
+                    fontWeight: FontWeight.bold,
                     color: Colors.black87,
-                    fontSize: 12
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -896,8 +894,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
                   children: [
                     Text(
                       record.transactPurpose ?? 'No Purpose',
-                      style: const TextStyle(
-                        fontFamily: "AROneSans",
+                      style: AppDesign.bodyStyle.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                         fontSize: 15,
@@ -908,21 +905,19 @@ class _RecordsScreenState extends State<RecordsScreen> {
                     const SizedBox(height: 2),
                     Text(
                       "Paid $dateString",
-                      style: const TextStyle(
-                        fontFamily: "AROneSans", 
-                        fontSize: 12, color: 
-                        Colors.grey, 
-                        fontWeight: FontWeight.w500
+                      style: AppDesign.bodyStyle.copyWith(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       foName,
-                      style: const TextStyle(
-                        fontFamily: "AROneSans", 
-                        fontSize: 12, color: 
-                        Colors.grey, 
-                        fontWeight: FontWeight.w500
+                      style: AppDesign.bodyStyle.copyWith(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
                       ),
                     )
                   ],
@@ -931,10 +926,12 @@ class _RecordsScreenState extends State<RecordsScreen> {
               
               // Amount
               Expanded(
+                flex: 2,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "Php ${record.transactAmount}",
+                    "Php ${double.tryParse(record.transactAmount ?? '0')?.toStringAsFixed(2) ?? '0.00'}",
+                    softWrap: false,
                     style: const TextStyle(
                       fontFamily: "AROneSans",
                       fontSize: 12,
