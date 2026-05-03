@@ -18,6 +18,7 @@ class LabeledFormField extends StatelessWidget {
   final LinearGradient? iconGradient;
   final Color? textColor;
   final Color? fillColor;
+  final bool optional;
 
   const LabeledFormField({
     super.key,
@@ -34,15 +35,26 @@ class LabeledFormField extends StatelessWidget {
     this.iconGradient,
     this.textColor,
     this.fillColor,
+    this.optional = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 5.0,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppDesign.bodyStyle),
-        const SizedBox(height: 5),
+        Row(
+          spacing: 5.0,
+          children: [
+            Text(label, style: AppDesign.bodyStyle),
+            if (!optional)
+              Text(
+                '*',
+                style: AppDesign.bodyStyle.copyWith(color: AppDesign.dangerRed),
+              )
+          ],
+        ),
         GradientTextFormField(
           controller: controller,
           inputFormatters: formatters,
