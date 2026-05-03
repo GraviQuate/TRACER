@@ -272,6 +272,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   children: [
                                                     LabeledFormField(
                                                       label: "M.I.",
+                                                      optional: true,
                                                       controller: _stuMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),
@@ -481,6 +482,7 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                                   children: [
                                                     LabeledFormField(
                                                       label: "M.I.",
+                                                      optional: true,
                                                       controller: _foMiddleInitialController,
                                                       formatters: [
                                                         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-z]')),

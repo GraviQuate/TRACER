@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 50),
 
                     //header logo
                     Opacity(
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
 
                     // main buttons
                     Transform.translate(
