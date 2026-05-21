@@ -99,6 +99,12 @@ class VerificationViewModel extends ChangeNotifier {
     ].any((element) => element.text.isEmpty);
   }
 
+  bool isAmountExceedingLimit() {
+    final double parsedAmount = double.tryParse(transactAmountController.text) ?? 0.0;
+    
+    return parsedAmount >= 1000000000;
+  }
+
   @override
   void dispose() {
     stuNumController.dispose();

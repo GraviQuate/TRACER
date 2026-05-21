@@ -378,13 +378,31 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
           }
         });
       }
+    } on AuthException catch (e) {
+      // Catch specific Supabase Auth Errors
+      if (mounted) {
+        final parentContext = context;
+        Navigator.pop(context);
+        
+        String customErrorMessage = 'An unexpected authentication error occurred.\nPlease try again.';
+        
+        // Add custom handling for common auth errors
+        if (e.message == 'Invalid login credentials') {
+          customErrorMessage = 'Incorrect current password.';
+        } 
+
+        Future.delayed(const Duration(milliseconds: 100), () {
+          ErrorSnackbar.show(parentContext, customErrorMessage);
+        });
+      }
     } catch (e) {
       if (mounted) {
         final parentContext = context;
         Navigator.pop(context);
         Future.delayed(const Duration(milliseconds: 100), () {
-          ErrorSnackbar.show(parentContext, 'Incorrect current password.');
+          ErrorSnackbar.show(parentContext, 'An unexpected error occurred.\nPlease try again.');
         });
+        debugPrint('Unexpected change password failure: $e');
       }
     } finally {
       if (mounted) setState(() => _isChangingPassword = false);

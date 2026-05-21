@@ -372,6 +372,11 @@ class DataVerificationScreenState extends State<DataVerificationScreen> {
                                               ErrorSnackbar.show(context, 'Please fill in all required fields!');
                                               return;
                                             }
+                                            
+                                            if (viewModel.isAmountExceedingLimit()) {
+                                              ErrorSnackbar.show(context, 'Amount is too large!');
+                                              return;
+                                            }
 
                                             viewModel.updateModel(widget.transaction);
 
