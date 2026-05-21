@@ -11,16 +11,16 @@ Future<Transaction> scanForm(Uint8List imageBytes, {http.Client ? client}) async
   final String base64Image = base64Encode(imageBytes);
   Transaction transaction = Transaction();
 
-  final response = await httpClient.post(
-    Uri.parse(Env.docAiEndpointUrl),
-    headers: {
-      "Content-Type": "application/json",
-      "X-Tracer-Key": Env.docAiKey,
-    },
-    body: jsonEncode({"imageBase64": base64Image}),
-  ).timeout(Duration(seconds: 15));
-
   try {
+    final response = await httpClient.post(
+      Uri.parse(Env.docAiEndpointUrl),
+      headers: {
+        "Content-Type": "application/json",
+        "X-Tracer-Key": Env.docAiKey,
+      },
+      body: jsonEncode({"imageBase64": base64Image}),
+    ).timeout(Duration(seconds: 120));
+
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
 
