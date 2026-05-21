@@ -229,11 +229,11 @@ class ScanConfirmationScreenState extends State<ScanConfirmationScreen>
                                   );
                                   if (!context.mounted) return;
                                 } on ScanTimeoutException {
-                                  ErrorSnackbar.show(context, 'The scan request took too long\nTry a faster wi-fi connection');
+                                  ErrorSnackbar.show(context, 'Server is busy\nPlease try again later');
                                 } on NoNetworkException {
                                   ErrorSnackbar.show(context, 'No internet detected');
                                 } catch (e) {
-                                  ErrorSnackbar.show(context, 'Unknown error,\nPlease try again later.');
+                                  ErrorSnackbar.show(context, 'Unknown error,\nPlease try again later');
                                 } finally {
                                   _initialAnimationController.reset();
                                   _finalAnimationController.reset();
