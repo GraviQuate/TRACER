@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'TRACER v2.1.0',
+                                  'TRACER v2.1.1',
                                   style: AppDesign.bodyStyle,
                                 ),
                                 SizedBox(height: sectionSpacing-30.0)
@@ -383,13 +383,13 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
       if (mounted) {
         final parentContext = context;
         Navigator.pop(context);
-        
+
         String customErrorMessage = 'An unexpected authentication error occurred.\nPlease try again.';
-        
+
         // Add custom handling for common auth errors
         if (e.message == 'Invalid login credentials') {
           customErrorMessage = 'Incorrect current password.';
-        } 
+        }
 
         Future.delayed(const Duration(milliseconds: 100), () {
           ErrorSnackbar.show(parentContext, customErrorMessage);
